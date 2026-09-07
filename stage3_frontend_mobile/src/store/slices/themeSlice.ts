@@ -5,7 +5,7 @@ export type ThemeMode = 'light' | 'dark';
 
 export const lightTheme = {
   ...MD3LightTheme,
-  isV3: true,
+  isV3: true as const,
   version: 3 as const,
   roundness: 12,
   colors: {
@@ -71,7 +71,7 @@ export const lightTheme = {
 
 export const darkTheme = {
   ...MD3DarkTheme,
-  isV3: true,
+  isV3: true as const,
   version: 3 as const,
   roundness: 12,
   colors: {

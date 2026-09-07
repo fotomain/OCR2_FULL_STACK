@@ -17,7 +17,13 @@ install:
 	cd stage3_frontend_mobile && npm install
 
 run:
-	./start_all.sh
+	./run_all
+
+run_all:
+	./run_all
+
+run-all:
+	./run_all
 
 run-stage1:
 	./run_stage1_ml_ocr

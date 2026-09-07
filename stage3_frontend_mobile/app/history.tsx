@@ -3,8 +3,8 @@ import { StyleSheet, View, FlatList } from 'react-native';
 import { Text, Card, Chip, IconButton, Surface, useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { useSelector } from 'react-redux';
-import { RootState } from '../src/store';
-import { sqliteService, ScanRecord } from '../src/services/sqlite_db';
+import { RootState } from '@/store';
+import { sqliteService, ScanRecord } from '@/services/sqlite_db';
 
 export default function HistoryScreen() {
   const router = useRouter();

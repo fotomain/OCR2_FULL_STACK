@@ -3,9 +3,9 @@ import { StyleSheet, View, FlatList } from 'react-native';
 import { Text, Card, Button, TextInput, IconButton, Surface, Avatar, useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../src/store';
-import { setCurrentUser, setAllUsers } from '../src/store/slices/authSlice';
-import { sqliteService, UserAccount } from '../src/services/sqlite_db';
+import { RootState, AppDispatch } from '@/store';
+import { setCurrentUser, setAllUsers } from '@/store/slices/authSlice';
+import { sqliteService, UserAccount } from '@/services/sqlite_db';
 
 export default function UsersScreen() {
   const router = useRouter();

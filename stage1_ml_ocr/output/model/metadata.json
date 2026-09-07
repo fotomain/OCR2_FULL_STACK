@@ -1,15 +1,15 @@
 {
   "version": "2.1.0",
-  "trained_at": "2026-09-07T14:18:26.296494+00:00",
+  "trained_at": "2026-09-07T16:28:39.171966+00:00",
   "classes": [
     "COMMERCIAL_INVOICE",
     "MEDICAL_PHARMA_INVOICE",
     "PURCHASE_RECEIPT",
     "TAX_STATEMENT"
   ],
-  "sample_count": 40,
+  "sample_count": 44,
   "base_documents_count": 6,
-  "user_documents_count": 34,
+  "user_documents_count": 38,
   "users_included": [
     "testuser@company.com",
     "vtest777999@gmail.com",

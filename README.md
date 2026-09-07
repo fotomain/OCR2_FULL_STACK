@@ -38,9 +38,13 @@ A production-grade, 3-tier document intelligence ecosystem consisting of a Pytho
 
 ## 🚀 Quick Start (Run Locally)
 
-### 1. Launch All Services Concurrently
+### 1. Launch All Services Concurrently from Mac Terminal
 ```bash
+./run_all
+# or
 ./start_all.sh
+# or
+make run_all
 ```
 
 ### 2. Launch Individual Services from Mac Terminal

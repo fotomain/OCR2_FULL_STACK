@@ -3,23 +3,24 @@ import { StyleSheet, View, ScrollView, Platform, Linking } from 'react-native';
 import { Appbar, Card, Button, Text, ProgressBar, Surface, IconButton, Chip, useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../src/store';
+import { RootState, AppDispatch } from '@/store';
 import {
   setSelectedDocument,
   setCaptchaPassed,
   startLearnModelRequest,
   fetchTestFilesRequest
-} from '../src/store/slices/ocrSlice';
-import { signOutSuccess } from '../src/store/slices/authSlice';
-import { toggleTheme } from '../src/store/slices/themeSlice';
-import { apiService, TestFileItem } from '../src/services/api';
-import { supabaseAuthService } from '../src/services/supabase';
-import { SelectDocumentOnMobileButton } from '../src/components/SelectDocumentOnMobileButton';
-import { RecogniseDocumentOnMobileButton } from '../src/components/RecogniseDocumentOnMobileButton';
-import { LocalCaptcha } from '../src/components/LocalCaptcha';
-import { ResultViewer } from '../src/components/ResultViewer';
-import { CameraCaptureModal } from '../src/components/CameraCaptureModal';
+} from '@/store/slices/ocrSlice';
+import { signOutSuccess } from '@/store/slices/authSlice';
+import { toggleTheme } from '@/store/slices/themeSlice';
+import { apiService, TestFileItem } from '@/services/api';
+import { supabaseAuthService } from '@/services/supabase';
+import { SelectDocumentOnMobileButton } from '@/components/SelectDocumentOnMobileButton';
+import { RecogniseDocumentOnMobileButton } from '@/components/RecogniseDocumentOnMobileButton';
+import { LocalCaptcha } from '@/components/LocalCaptcha';
+import { ResultViewer } from '@/components/ResultViewer';
+import { CameraCaptureModal } from '@/components/CameraCaptureModal';
 
+// noinspection SpellCheckingInspection,JSUnusedGlobalSymbols
 export default function MobileDashboardScreen() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
@@ -142,7 +143,7 @@ export default function MobileDashboardScreen() {
       {/* Executive MD3 Appbar with Supabase Auth status */}
       <Appbar.Header style={[styles.appbar, { backgroundColor: theme.colors.headerBg, borderBottomColor: theme.colors.outline }]} elevated>
         <Appbar.Content
-          title="OCR3 Enterprise Mobile"
+          title="OCR2 Enterprise Mobile"
           subtitle={`${currentUser.email} • MD3`}
           titleStyle={[styles.appbarTitle, { color: theme.colors.textMain }]}
           subtitleStyle={[styles.appbarSubtitle, { color: theme.colors.textDim }]}

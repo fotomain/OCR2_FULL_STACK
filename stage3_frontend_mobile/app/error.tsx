@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ErrorScreen } from '../src/components/ErrorScreen';
+import { ErrorScreen } from '@/components/ErrorScreen';
 
 export default function ErrorRoute() {
   const router = useRouter();

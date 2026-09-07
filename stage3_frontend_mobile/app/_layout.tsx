@@ -4,29 +4,43 @@ import { Stack } from 'expo-router';
 import { Provider as ReduxProvider, useSelector, useDispatch } from 'react-redux';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { store, RootState, AppDispatch } from '../src/store';
-import { sqliteService } from '../src/services/sqlite_db';
-import { supabase } from '../src/services/supabase';
-import { authSuccess, signOutSuccess } from '../src/store/slices/authSlice';
-import { ErrorScreen } from '../src/components/ErrorScreen';
-import { lightTheme, darkTheme } from '../src/store/slices/themeSlice';
+import { store, RootState, AppDispatch } from '@/store';
+import { sqliteService } from '@/services/sqlite_db';
+import { supabase } from '@/services/supabase';
+import { authSuccess, signOutSuccess } from '@/store/slices/authSlice';
+import { ErrorScreen } from '@/components/ErrorScreen';
+import { lightTheme, darkTheme } from '@/store/slices/themeSlice';
 
-interface ErrorBoundaryProps {
+interface RootErrorBoundaryProps {
   children: ReactNode;
 }
 
-interface ErrorBoundaryState {
+interface RootErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
 }
 
-class RootErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
+// noinspection JSUnusedGlobalSymbols
+export function ErrorBoundary({ error, retry }: { error: Error; retry: () => void }) {
+  return (
+    <PaperProvider theme={lightTheme}>
+      <ErrorScreen
+        errorTitle="Connection Refused: Local Service Offline"
+        errorMessage={error?.message || 'net::ERR_CONNECTION_REFUSED'}
+        onRetry={retry}
+        onContinueOffline={retry}
+      />
+    </PaperProvider>
+  );
+}
+
+class RootErrorBoundary extends Component<RootErrorBoundaryProps, RootErrorBoundaryState> {
+  constructor(props: RootErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+  static getDerivedStateFromError(error: Error): RootErrorBoundaryState {
     return { hasError: true, error };
   }
 
@@ -41,32 +55,17 @@ class RootErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState
   render() {
     if (this.state.hasError) {
       return (
-        <PaperProvider theme={lightTheme}>
-          <ErrorScreen
-            errorTitle="Connection or Runtime Error"
-            errorMessage={this.state.error?.message || 'net::ERR_CONNECTION_REFUSED'}
-            onRetry={this.handleRetry}
-            onContinueOffline={this.handleRetry}
-          />
-        </PaperProvider>
+        <ErrorBoundary
+          error={this.state.error || new Error('Connection or Runtime Error')}
+          retry={this.handleRetry}
+        />
       );
     }
     return this.props.children;
   }
 }
 
-export function ErrorBoundary({ error, retry }: { error: Error; retry: () => void }) {
-  return (
-    <PaperProvider theme={lightTheme}>
-      <ErrorScreen
-        errorTitle="Connection Refused: Local Service Offline"
-        errorMessage={error?.message || 'net::ERR_CONNECTION_REFUSED'}
-        onRetry={retry}
-      />
-    </PaperProvider>
-  );
-}
-
+// noinspection SpellCheckingInspection
 function ThemedNavigationContainer() {
   const dispatch = useDispatch<AppDispatch>();
   const themeMode = useSelector((state: RootState) => state.theme.themeMode);
@@ -152,9 +151,13 @@ function ThemedNavigationContainer() {
   );
 }
 
+// noinspection JSUnusedGlobalSymbols
 export default function RootLayout() {
   useEffect(() => {
-    sqliteService.initDatabase();
+    // noinspection JSIgnoredPromiseFromCall
+    void sqliteService.initDatabase().catch((error: unknown) => {
+      console.error('Failed to initialize SQLite database:', error);
+    });
   }, []);
 
   return (

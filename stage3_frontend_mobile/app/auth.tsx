@@ -3,15 +3,16 @@ import { StyleSheet, View, ScrollView, Platform } from 'react-native';
 import { Text, Card, Button, TextInput, IconButton, Surface, Avatar, Chip, SegmentedButtons, useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../src/store';
+import { RootState, AppDispatch } from '@/store';
 import {
   setAuthLoading,
   setAuthError,
   authSuccess,
   signOutSuccess
-} from '../src/store/slices/authSlice';
-import { supabaseAuthService } from '../src/services/supabase';
+} from '@/store/slices/authSlice';
+import { supabaseAuthService } from '@/services/supabase';
 
+// noinspection SpellCheckingInspection,JSUnusedGlobalSymbols
 export default function SupabaseAuthScreen() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();

@@ -26,6 +26,7 @@ echo " 1. Stage 1 ML OCR Backend:       http://127.0.0.1:8000 (Docs: /docs)"
 echo " 2. Stage 2 Django Web Frontend:  http://127.0.0.1:8080"
 echo " 3. Stage 3 Mobile Expo App (MD3): http://127.0.0.1:8081"
 echo " 4. Interactive Gantt Report:     file://$DIR/reports/OCR2_HOW_IT_WORKS_REPORT.html"
+echo " 5. Interactive Ecosystem Map:    file://$DIR/reports/ECOSYSTEM_MAP.html"
 echo "======================================================================="
 
 # Trap to kill all background processes on exit
