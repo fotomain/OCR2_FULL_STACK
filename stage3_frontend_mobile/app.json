@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "OCR2 Mobile Enterprise",
+    "slug": "stage2-frontend-mobile",
+    "version": "2.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "scheme": "ocr2mobile",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0a0f1d"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ocr2.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0a0f1d"
+      },
+      "package": "com.ocr2.mobile"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow OCR2 to access camera for document capture."
+        }
+      ]
+    ]
+  }
+}

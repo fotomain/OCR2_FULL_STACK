@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ophthalmology Medical Tax Invoice - BALTIC EYE & MICROSURGERY PHARMA</title>
+  <style>
+    @page {
+      size: A4 landscape;
+      margin: 6mm 8mm;
+      background-color: #ffffff;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+      background-color: #ffffff;
+      line-height: 1.2;
+      font-size: 8pt;
+    }
+    .invoice-card {
+      width: 100%;
+      border: 1px solid #0891b2;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .cyan-top-bar {
+      height: 5px;
+      background: linear-gradient(90deg, #0891b2, #06b6d4, #0284c7);
+    }
+    /* Header Table */
+    .top-header-tbl {
+      width: 100%;
+      border-collapse: collapse;
+      background: #f0fdf4;
+      border-bottom: 1px solid #cffafe;
+      padding: 6px 12px;
+    }
+    .top-header-tbl td { padding: 6px 10px; vertical-align: middle; }
+    .brand-title { font-size: 12pt; font-weight: 900; color: #155e75; letter-spacing: -0.3px; }
+    .badge-iso {
+      font-size: 6pt; font-weight: 800; background: #cffafe; color: #0e7490;
+      border: 1px solid #a5f3fc; padding: 1px 4px; border-radius: 3px; display: inline-block; margin-left: 4px;
+    }
+    .inv-h1 { font-size: 14pt; font-weight: 900; text-align: right; color: #155e75; }
+    .inv-sub-id { font-family: monospace; font-size: 8.5pt; font-weight: 700; color: #0891b2; text-align: right; }
+
+    /* Requisites Strip: 3-column banner */
+    .req-banner {
+      width: 100%;
+      border-collapse: collapse;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .req-banner td {
+      width: 33.33%;
+      padding: 6px 10px;
+      vertical-align: top;
+      font-size: 7pt;
+      line-height: 1.3;
+    }
+    .req-banner td:not(:last-child) {
+      border-right: 1px solid #e2e8f0;
+    }
+    .col-title {
+      font-size: 6pt; font-weight: 800; text-transform: uppercase; color: #0891b2;
+      border-bottom: 1px dashed #cbd5e1; padding-bottom: 1px; margin-bottom: 3px;
+    }
+    .org-name { font-weight: 800; color: #0f172a; font-size: 7.5pt; }
+    .vat-tag { background: #cffafe; color: #0e7490; font-weight: 700; padding: 1px 3px; border-radius: 2px; }
+
+    /* Logistics & Validity Bar */
+    .timeline-bar {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ecfeff;
+      border-bottom: 1px solid #cffafe;
+    }
+    .timeline-bar td {
+      width: 25%;
+      padding: 4px 10px;
+      font-size: 7pt;
+      vertical-align: middle;
+    }
+    .tl-lbl { font-size: 5.5pt; font-weight: 800; text-transform: uppercase; color: #0891b2; }
+    .tl-val { font-family: monospace; font-weight: 700; color: #164e63; }
+
+    /* Items Table */
+    .table-items {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 7pt;
+    }
+    .table-items th {
+      background: #155e75;
+      color: #ffffff;
+      font-size: 6pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      padding: 5px 5px;
+      border: 1px solid #155e75;
+      text-align: left;
+    }
+    .table-items td {
+      padding: 5px 5px;
+      vertical-align: middle;
+      border: 1px solid #e2e8f0;
+      color: #1e293b;
+    }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .item-id-pill { font-family: monospace; font-size: 6.5pt; font-weight: 700; color: #0e7490; background: #cffafe; padding: 1px 3px; border-radius: 2px; }
+    .zva-reg-pill { font-family: monospace; font-size: 6.5pt; font-weight: 700; color: #831843; background: #fdf2f8; border: 1px solid #fbcfe8; padding: 1px 3px; border-radius: 2px; }
+    .exp-pill { font-family: monospace; font-size: 6.5pt; font-weight: 800; color: #92400e; background: #fef3c7; border: 1px solid #fde68a; padding: 1px 3px; border-radius: 2px; }
+    .unit-pill { font-size: 6pt; font-weight: 800; background: #f1f5f9; color: #475569; padding: 1px 3px; border-radius: 2px; border: 1px solid #cbd5e1; }
+    .badge-attr { font-size: 5.5pt; font-weight: 600; padding: 1px 2px; border-radius: 2px; display: inline-block; margin-bottom: 1px; }
+    .attr-oph { background: #ecfeff; color: #0e7490; border: 1px solid #cffafe; }
+    .attr-vis { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .attr-opt { background: #fdf4ff; color: #86198f; border: 1px solid #fae8ff; }
+    .bc-box { text-align: center; }
+    .bc-type-tag { font-size: 5pt; font-weight: 800; background: #ecfeff; color: #0891b2; padding: 0 2px; border-radius: 2px; display: inline-block; }
+
+    /* Bottom Summary */
+    .bot-section {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fafafa;
+      border-top: 1px solid #cbd5e1;
+    }
+    .bot-section td {
+      padding: 6px 10px;
+      vertical-align: top;
+    }
+    .bot-left {
+      width: 55%;
+      border-right: 1px solid #e2e8f0;
+    }
+    .bot-right {
+      width: 45%;
+    }
+    .comp-note {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      padding: 4px 6px;
+      font-size: 6pt;
+      color: #475569;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .forex-banner {
+      background: #ecfeff;
+      border: 1px solid #a5f3fc;
+      border-radius: 4px;
+      padding: 4px 6px;
+      font-size: 6pt;
+      color: #155e75;
+      margin-bottom: 4px;
+    }
+    .qr-pair-tbl { width: 100%; border-collapse: collapse; }
+    .qr-pair-tbl td { vertical-align: middle; padding: 2px; font-size: 6pt; }
+    .qr-txt-title { font-size: 5.5pt; font-weight: 800; color: #0891b2; text-transform: uppercase; }
+    .qr-txt-val { font-family: monospace; font-size: 6pt; font-weight: 700; background: #ffffff; padding: 1px 3px; border-radius: 2px; border: 1px solid #cffafe; display: inline-block; }
+
+    .calc-tbl { width: 100%; border-collapse: collapse; font-size: 7pt; }
+    .calc-tbl td { padding: 2px 0; }
+    .vat-line td { color: #0891b2; font-weight: 700; border-top: 1px dashed #cbd5e1; border-bottom: 1px dashed #cbd5e1; padding: 3px 0; }
+    .final-usd td { font-size: 8.5pt; font-weight: 900; color: #155e75; border-top: 1.5px solid #155e75; padding-top: 3px; }
+    .final-eur td { font-size: 9.5pt; font-weight: 900; color: #059669; padding-top: 2px; }
+    .tag-eur { background: #d1fae5; color: #047857; font-size: 6pt; font-weight: 800; padding: 1px 3px; border-radius: 2px; margin-right: 2px; }
+
+    .footer-strip {
+      background: #155e75;
+      color: #cffafe;
+      font-size: 5.5pt;
+      padding: 3px 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+
+<div class="invoice-card">
+  <div class="cyan-top-bar"></div>
+
+  <!-- HEADER -->
+  <table class="top-header-tbl">
+    <tr>
+      <td style="width: 60%;">
+        <div class="brand-title">BALTIC EYE & MICROSURGERY PHARMA <span class="badge-iso">ISO 13485 &bull; CE 0123 &bull; ZVA CERTIFIED</span></div>
+        <div style="font-size: 6.8pt; color: #0e7490;">Sterile Ophthalmic Biopolymers, Anti-VEGF Therapeutics & Intraocular Viscosurgical Devices</div>
+      </td>
+      <td style="width: 40%;">
+        <div class="inv-h1">TAX INVOICE</div>
+        <div class="inv-sub-id">INV-2026-OPH-448102</div>
+        <div style="text-align: right; font-size: 6pt; font-weight: 800; color: #047857;">&bull; REGISTRY VALIDATED</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- 3-COLUMN REQUISITES BANNER -->
+  <table class="req-banner">
+    <tr>
+      <!-- Col 1: Vendor -->
+      <td>
+        <div class="col-title">Vendor / Manufacturer Requisites</div>
+        <div class="org-name">Baltic Eye Microsurgical SIA</div>
+        <div><span>HQ:</span> Krustpils iela 17, Latgales pr., Rīga, LV-1073, Latvia</div>
+        <div><span>Vendor VAT:</span> <span class="vat-tag">LV-VAT LV40003881920</span></div>
+        <div><span>ZVA Medical Device License:</span> #ZVA-MD-2026-118</div>
+        <div><span>Email:</span> orders@balticeye.lv &bull; <span>Tel:</span> +371 6700 8891</div>
+        <div><span>Bank:</span> Citadele Banka AS &bull; <span>IBAN:</span> LV44 PARX 0012 9948 1029 33</div>
+      </td>
+      <!-- Col 2: Customer -->
+      <td>
+        <div class="col-title">Customer & Consignee Requisites</div>
+        <div class="org-name">Latvian American Eye Center (LAAC)</div>
+        <div><span>Address:</span> Augusta Deglava iela 66, Rīga, LV-1035, Latvia</div>
+        <div><span>Consumer VAT Registration:</span> <span class="vat-tag">LV-VAT LV40003189401</span></div>
+        <div><span>Dispensary:</span> Ambulatory Surgery & Retinal Laser Clinic</div>
+        <div><span>Chief Surgeon:</span> Prof. Māra Ozoliņa, MD, PhD</div>
+        <div><span>Email:</span> procurement@laac.lv &bull; <span>PO Ref:</span> PO-2026-LAAC-881</div>
+      </td>
+      <!-- Col 3: Contract & Tender -->
+      <td>
+        <div class="col-title">Framework Governance & Agreement</div>
+        <div><span>Contract No:</span> <strong>CTR-2026-LAAC-OPH-994</strong></div>
+        <div><span>Contract Starting Date:</span> 2026-03-15 (Effective)</div>
+        <div><span>Contract Expiration:</span> 2029-03-14 (36 Months)</div>
+        <div><span>Invoice Validity:</span> Valid Before 2026-10-01</div>
+        <div><span>Delivery Carrier:</span> LV-COLD-OPH-7712 (Active Thermo)</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- TIMELINE & LOGISTICS BAR -->
+  <table class="timeline-bar">
+    <tr>
+      <td><div class="tl-lbl">Invoice Issue Date</div><div class="tl-val">2026-08-24 13:30 EEST</div></td>
+      <td><div class="tl-lbl">Payment Terms & Due Date</div><div class="tl-val">Net 30 &bull; Due 2026-09-23</div></td>
+      <td><div class="tl-lbl">Shipment Waybill</div><div class="tl-val">WB-OPH-2026-99148</div></td>
+      <td><div class="tl-lbl">Storage Protocol</div><div class="tl-val">+2&deg;C to +8&deg;C (Monitored Active RFID)</div></td>
+    </tr>
+  </table>
+
+  <!-- 5 LINE ITEMS TABLE -->
+  <table class="table-items">
+    <thead>
+      <tr>
+        <th style="width: 2%;">#</th>
+        <th style="width: 6.5%;">Item ID</th>
+        <th style="width: 10%;">Latvian Registry Code</th>
+        <th style="width: 14%;">Ophthalmic / Surgical Product</th>
+        <th style="width: 18%;">Technical & Chemical Attributes</th>
+        <th style="width: 7%;">Lot/Batch</th>
+        <th style="width: 8.5%;" class="text-center">Expiration Date</th>
+        <th style="width: 14.5%;" class="text-center">Barcode Standard</th>
+        <th style="width: 3.5%;" class="text-right">Qty</th>
+        <th style="width: 4%;">Unit</th>
+        <th style="width: 5%;" class="text-right">Price/1 Unit</th>
+        <th style="width: 5%;" class="text-right">Pkg Price</th>
+        <th style="width: 5.5%;" class="text-right">Amount (USD)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Line 1 -->
+      <tr>
+        <td>01</td>
+        <td><span class="item-id-pill">OPH-1102</span></td>
+        <td><span class="zva-reg-pill">LV-ZVA-034918-01</span></td>
+        <td>
+          <div style="font-weight: 700; color: #155e75;">Aflibercept Intravitreal 40mg/mL</div>
+          <div style="font-size: 6pt; color: #64748b;">Anti-VEGF Fusion Protein &bull; 0.1mL</div>
+        </td>
+        <td>
+          <div><span class="badge-attr attr-oph">VEGF-Trap &bull; Conc: 40 mg/mL</span></div>
+          <div><span class="badge-attr attr-vis">Cold Storage: 2°C - 8°C &bull; Sterile Syringe</span></div>
+          <div><span class="badge-attr attr-opt">Ready-to-Use 30G x 1/2" Needle</span></div>
+        </td>
+        <td style="font-family: monospace; font-size: 6pt; font-weight: 600;">AFL26-881</td>
+        <td class="text-center"><span class="exp-pill">EXP: 2028-10-31</span></td>
+        <td class="text-center"><div class="bc-box">
+        <span class="bc-type-tag">GS1-128</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 115 28" width="115" height="28">
+            <rect x="0.00" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="2.64" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="3.97" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="7.93" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="9.25" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="10.57" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="14.54" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="17.18" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="18.51" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="22.47" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="23.79" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="27.76" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="33.05" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="34.37" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="35.69" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="38.33" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="39.66" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="42.30" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="46.26" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="52.87" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="55.52" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="56.84" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="58.16" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="59.48" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="67.41" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="68.74" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="70.06" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="71.38" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="72.70" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="74.02" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="75.34" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="76.67" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="77.99" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="80.63" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="85.92" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="87.24" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="89.89" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="91.21" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="97.82" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="99.14" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="100.46" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="101.78" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="103.10" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="104.43" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="105.75" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="107.07" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="111.03" y="0" width="1.22" height="19" fill="#0e7490"/><rect x="113.68" y="0" width="1.22" height="19" fill="#0e7490"/>
+            <text x="57.5" y="27" font-family="monospace" font-size="5.5" fill="#475569" text-anchor="middle" font-weight="600">(01)OPH-1102 (17)EXP:2028-10-31</text>
+        </svg>
+    </div></td>
+        <td class="text-right font-mono" style="font-weight: 700;">60</td>
+        <td><span class="unit-pill">SYR</span></td>
+        <td class="text-right font-mono" style="font-weight: 700; color: #0891b2;">$1,420.00</td>
+        <td class="text-right font-mono">$1,420.00</td>
+        <td class="text-right font-mono" style="font-weight: 700;">$85,200.00</td>
+      </tr>
+
+      <!-- Line 2 -->
+      <tr>
+        <td>02</td>
+        <td><span class="item-id-pill">OPH-4480</span></td>
+        <td><span class="zva-reg-pill">LV-ZVA-028301-02</span></td>
+        <td>
+          <div style="font-weight: 700; color: #155e75;">Sodium Hyaluronate 1.4% (OVD)</div>
+          <div style="font-size: 6pt; color: #64748b;">Cohesive Viscoelastic &bull; 1.0mL</div>
+        </td>
+        <td>
+          <div><span class="badge-attr attr-oph">Mol Wt: 3.2 MDa &bull; High Viscosity</span></div>
+          <div><span class="badge-attr attr-vis">Cataract Endothelial Protection</span></div>
+          <div><span class="badge-attr attr-opt">Prefilled Glass Syringe w/ Cannula</span></div>
+        </td>
+        <td style="font-family: monospace; font-size: 6pt; font-weight: 600;">VIS26-440</td>
+        <td class="text-center"><span class="exp-pill">EXP: 2028-06-30</span></td>
+        <td class="text-center"><div class="bc-box">
+        <span class="bc-type-tag">HIBC-128</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 28" width="110" height="28">
+            <rect x="0.00" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="3.55" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="5.32" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="8.87" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="15.97" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="17.74" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="19.52" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="21.29" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="23.06" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="26.61" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="31.94" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="35.48" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="39.03" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="40.81" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="44.35" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="47.90" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="49.68" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="51.45" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="55.00" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="58.55" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="60.32" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="62.10" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="65.65" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="67.42" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="69.19" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="72.74" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="74.52" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="76.29" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="78.06" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="83.39" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="85.16" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="86.94" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="90.48" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="94.03" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="101.13" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="102.90" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="106.45" y="0" width="1.63" height="19" fill="#0e7490"/><rect x="108.23" y="0" width="1.63" height="19" fill="#0e7490"/>
+            <text x="55.0" y="27" font-family="monospace" font-size="5.5" fill="#475569" text-anchor="middle" font-weight="600">+H772-OPH-4480-VIS901</text>
+        </svg>
+    </div></td>
+        <td class="text-right font-mono" style="font-weight: 700;">200</td>
+        <td><span class="unit-pill">SYR</span></td>
+        <td class="text-right font-mono" style="font-weight: 700; color: #0891b2;">$84.50</td>
+        <td class="text-right font-mono">$84.50</td>
+        <td class="text-right font-mono" style="font-weight: 700;">$16,900.00</td>
+      </tr>
+
+      <!-- Line 3 -->
+      <tr>
+        <td>03</td>
+        <td><span class="item-id-pill">OPH-8831</span></td>
+        <td><span class="zva-reg-pill">LV-ZVA-019482-01</span></td>
+        <td>
+          <div style="font-weight: 700; color: #155e75;">Moxifloxacin 0.5% Eye Drops</div>
+          <div style="font-size: 6pt; color: #64748b;">Fluoroquinolone &bull; Box of 10</div>
+        </td>
+        <td>
+          <div><span class="badge-attr attr-oph">4th Gen Antibacterial &bull; pH 6.8</span></div>
+          <div><span class="badge-attr attr-vis">Store 15°C - 25°C &bull; Isotonic Sol.</span></div>
+          <div><span class="badge-attr attr-opt">5mL Droptainer Bottles</span></div>
+        </td>
+        <td style="font-family: monospace; font-size: 6pt; font-weight: 600;">MOX26-104</td>
+        <td class="text-center"><span class="exp-pill">EXP: 2028-03-31</span></td>
+        <td class="text-center"><div class="bc-box">
+        <span class="bc-type-tag">EAN-13</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 105 28" width="105" height="28">
+            <rect x="0.00" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="3.89" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="7.78" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="11.67" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="15.56" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="17.50" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="23.33" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="25.28" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="27.22" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="29.17" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="31.11" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="33.06" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="38.89" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="42.78" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="46.67" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="50.56" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="56.39" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="58.33" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="60.28" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="62.22" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="66.11" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="70.00" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="71.94" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="79.72" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="81.67" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="87.50" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="91.39" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="93.33" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="97.22" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="99.17" y="0" width="1.79" height="19" fill="#0e7490"/><rect x="103.06" y="0" width="1.79" height="19" fill="#0e7490"/>
+            <text x="52.5" y="27" font-family="monospace" font-size="5.5" fill="#475569" text-anchor="middle" font-weight="600">[OPH-8831] 475902184910</text>
+        </svg>
+    </div></td>
+        <td class="text-right font-mono" style="font-weight: 700;">150</td>
+        <td><span class="unit-pill">BOX/10</span></td>
+        <td class="text-right font-mono" style="font-weight: 700; color: #0891b2;">$6.20</td>
+        <td class="text-right font-mono">$62.00</td>
+        <td class="text-right font-mono" style="font-weight: 700;">$9,300.00</td>
+      </tr>
+
+      <!-- Line 4 -->
+      <tr>
+        <td>04</td>
+        <td><span class="item-id-pill">OPH-3320</span></td>
+        <td><span class="zva-reg-pill">LV-ZVA-017204-03</span></td>
+        <td>
+          <div style="font-weight: 700; color: #155e75;">Dorzolamide + Timolol Drops</div>
+          <div style="font-size: 6pt; color: #64748b;">Glaucoma Dual-Action &bull; Box 10</div>
+        </td>
+        <td>
+          <div><span class="badge-attr attr-oph">CAI + Beta-Blocker Combination</span></div>
+          <div><span class="badge-attr attr-vis">Preservative-Free Unit Doses</span></div>
+          <div><span class="badge-attr attr-opt">0.2mL Single-Use Pipettes</span></div>
+        </td>
+        <td style="font-family: monospace; font-size: 6pt; font-weight: 600;">DOR26-772</td>
+        <td class="text-center"><span class="exp-pill">EXP: 2027-12-15</span></td>
+        <td class="text-center"><div class="bc-box">
+        <span class="bc-type-tag">CODE-39</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 105 28" width="105" height="28">
+            <rect x="0.00" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="4.92" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="8.20" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="9.84" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="13.12" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="14.77" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="22.97" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="29.53" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="34.45" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="39.38" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="41.02" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="54.14" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="57.42" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="59.06" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="62.34" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="63.98" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="65.62" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="70.55" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="72.19" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="80.39" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="82.03" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="83.67" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="86.95" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="88.59" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="91.88" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="95.16" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="100.08" y="0" width="1.51" height="19" fill="#0e7490"/><rect x="103.36" y="0" width="1.51" height="19" fill="#0e7490"/>
+            <text x="52.5" y="27" font-family="monospace" font-size="5.5" fill="#475569" text-anchor="middle" font-weight="600">*OPH-3320-DOR88*</text>
+        </svg>
+    </div></td>
+        <td class="text-right font-mono" style="font-weight: 700;">100</td>
+        <td><span class="unit-pill">BOX/10</span></td>
+        <td class="text-right font-mono" style="font-weight: 700; color: #0891b2;">$5.00</td>
+        <td class="text-right font-mono">$50.00</td>
+        <td class="text-right font-mono" style="font-weight: 700;">$5,000.00</td>
+      </tr>
+
+      <!-- Line 5 -->
+      <tr>
+        <td>05</td>
+        <td><span class="item-id-pill">OPH-9940</span></td>
+        <td><span class="zva-reg-pill">LV-ZVA-036819-02</span></td>
+        <td>
+          <div style="font-weight: 700; color: #155e75;">Hydrophobic Acrylic Foldable IOL</div>
+          <div style="font-size: 6pt; color: #64748b;">Preloaded Intraocular Lens &bull; CS/20</div>
+        </td>
+        <td>
+          <div><span class="badge-attr attr-oph">Aspheric UV-Blocking Optic &bull; +21.5D</span></div>
+          <div><span class="badge-attr attr-vis">EtO Gas Sterilized &bull; Zero Glistenings</span></div>
+          <div><span class="badge-attr attr-opt">Fully Automated Preloaded Injector</span></div>
+        </td>
+        <td style="font-family: monospace; font-size: 6pt; font-weight: 600;">IOL26-904</td>
+        <td class="text-center"><span class="exp-pill">EXP: 2029-05-31</span></td>
+        <td class="text-center"><div class="bc-box">
+        <span class="bc-type-tag">ITF-14</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 28" width="110" height="28">
+            <rect x="0.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="2.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="4.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="8.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="12.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="18.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="20.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="22.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="26.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="28.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="30.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="36.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="38.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="44.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="46.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="50.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="52.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="56.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="60.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="62.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="66.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="70.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="74.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="84.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="90.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="92.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="96.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="98.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="100.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="102.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="104.00" y="0" width="1.84" height="19" fill="#0e7490"/><rect x="108.00" y="0" width="1.84" height="19" fill="#0e7490"/>
+            <text x="55.0" y="27" font-family="monospace" font-size="5.5" fill="#475569" text-anchor="middle" font-weight="600">ITF: OPH-9940-182941</text>
+        </svg>
+    </div></td>
+        <td class="text-right font-mono" style="font-weight: 700;">20</td>
+        <td><span class="unit-pill">PLT/CS</span></td>
+        <td class="text-right font-mono" style="font-weight: 700; color: #0891b2;">$115.00</td>
+        <td class="text-right font-mono">$2,300.00</td>
+        <td class="text-right font-mono" style="font-weight: 700;">$46,000.00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- BOTTOM SECTION -->
+  <table class="bot-section">
+    <tr>
+      <!-- Left side: notes & QR -->
+      <td class="bot-left">
+        <div class="comp-note">
+          <strong>Ophthalmic Regulatory Certification:</strong> Manufactured under ISO 13485:2016 and MDR (EU) 2017/745. Registered in Latvian National Medicines Agency (ZVA). Cold chain integrity certified intact.
+        </div>
+        <div class="forex-banner">
+          <strong>Forex Settlement Benchmark:</strong> 1 USD = 0.918420 EUR &bull; EUR/USD = 1.088826 (Fix Date: 2026-08-24 09:00 UTC).
+        </div>
+        <table class="qr-pair-tbl">
+          <tr>
+            <td style="width: 56px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" width="52" height="52">
+        <rect width="52" height="52" fill="#ffffff" rx="4" stroke="#67e8f9" stroke-width="1"/>
+        <g transform="scale(0.86) translate(3.6400000000000006, 3.6400000000000006)">
+            <rect x="0.00" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="2.48" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="12.38" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="22.29" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="47.05" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="2.48" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="2.48" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="2.48" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="2.48" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="2.48" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="2.48" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="2.48" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="12.38" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="12.38" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="12.38" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="12.38" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="12.38" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="12.38" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="2.48" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="12.38" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="47.05" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="17.33" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="17.33" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="17.33" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="2.48" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="17.33" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="32.19" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="2.48" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="12.38" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="32.19" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="47.05" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="2.48" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="17.33" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="22.29" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="32.19" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="2.48" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="12.38" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="17.33" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="22.29" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="47.05" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="12.38" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="17.33" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="47.05" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="32.19" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="32.19" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="32.19" y="32.19" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="32.19" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="32.19" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="32.19" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="32.19" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="32.19" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="2.48" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="12.38" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="32.19" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="22.29" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="47.05" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="22.29" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="32.19" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="47.05" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="22.29" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="32.19" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="22.29" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="32.19" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="47.05" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="47.05" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="47.05" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="22.29" y="47.05" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="47.05" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="47.05" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="47.05" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="47.05" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="47.05" y="47.05" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="47.05" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="2.48" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="12.38" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="22.29" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="32.19" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="47.05" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/>
+        </g>
+    </svg></td>
+            <td>
+              <div class="qr-txt-title">Audit Crypto Hash Token</div>
+              <div class="qr-txt-val">8d3f71c4-11e9-4e02-b258-00a94e82b719</div>
+            </td>
+            <td style="width: 56px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" width="52" height="52">
+        <rect width="52" height="52" fill="#ffffff" rx="4" stroke="#67e8f9" stroke-width="1"/>
+        <g transform="scale(0.86) translate(3.6400000000000006, 3.6400000000000006)">
+            <rect x="0.00" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="2.48" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="12.38" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="47.05" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="0.00" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="2.48" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="2.48" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="2.48" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="2.48" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="2.48" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="4.95" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="22.29" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="7.43" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="9.90" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="12.38" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="12.38" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="12.38" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="12.38" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="12.38" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="2.48" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="12.38" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="47.05" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="14.86" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="17.33" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="17.33" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="17.33" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="19.81" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="2.48" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="17.33" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="32.19" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="47.05" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="22.29" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="12.38" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="22.29" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="32.19" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="47.05" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="24.76" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="27.24" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="12.38" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="29.71" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="32.19" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="32.19" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="32.19" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="32.19" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="47.05" y="32.19" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="32.19" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="2.48" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="12.38" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="34.67" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="22.29" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="37.14" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="29.71" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="32.19" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="39.62" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="42.10" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="22.29" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="34.67" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="44.57" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="47.05" y="44.57" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="47.05" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="47.05" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="24.76" y="47.05" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="27.24" y="47.05" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="47.05" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="42.10" y="47.05" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="0.00" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="2.48" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="4.95" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="7.43" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="9.90" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="12.38" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="14.86" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="19.81" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="22.29" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="37.14" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="39.62" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/><rect x="49.52" y="49.52" width="2.48" height="2.48" fill="#0f172a" rx="0.4"/>
+        </g>
+    </svg></td>
+            <td>
+              <div class="qr-txt-title">Portal Verification</div>
+              <div class="qr-txt-val">https://www.ok.com</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+
+      <!-- Right side: Calculation Matrix -->
+      <td class="bot-right">
+        <table class="calc-tbl">
+          <tr>
+            <td style="color: #64748b;">Ophthalmic Subtotal:</td>
+            <td class="text-right font-mono" style="font-weight: 700;">$162,400.00</td>
+          </tr>
+          <tr>
+            <td style="color: #64748b;">Sterile Cold-Chain Express Freight:</td>
+            <td class="text-right font-mono" style="font-weight: 700;">$950.00</td>
+          </tr>
+          <tr>
+            <td style="color: #64748b;">Taxable Base:</td>
+            <td class="text-right font-mono" style="font-weight: 700;">$163,350.00</td>
+          </tr>
+          <tr class="vat-line">
+            <td>Consumer VAT (7.50% Assessment):</td>
+            <td class="text-right font-mono">+ $12,251.25</td>
+          </tr>
+          <tr class="final-usd">
+            <td>Total Invoice Amount (USD):</td>
+            <td class="text-right font-mono">$175,601.25</td>
+          </tr>
+          <tr class="final-eur">
+            <td><span class="tag-eur">FOREX EUR</span> Total Payable in Euro:</td>
+            <td class="text-right font-mono">&euro;161,275.70</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- FOOTER STRIP -->
+  <div class="footer-strip">
+    <div>Baltic EyeERP Optical v6.0 &bull; SHA-256 Validated &bull; DSCSA & MDR 2017/745 / ZVA Certified</div>
+    <div>Settlement Forex: 0.91842 EUR/USD &bull; Page 1 of 1</div>
+  </div>
+</div>
+
+</body>
+</html>

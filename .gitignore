@@ -1,0 +1,138 @@
+# ==============================================================================
+# OCR2 Enterprise Project - .gitignore
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Operating System & Filesystem
+# ------------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
+
+# ------------------------------------------------------------------------------
+# 2. Environment Variables & Secret Credentials
+# ------------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.template
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+
+# ------------------------------------------------------------------------------
+# 3. Python & Virtual Environments
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Python Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+
+# ------------------------------------------------------------------------------
+# 4. Django Web Framework (Stage 2)
+# ------------------------------------------------------------------------------
+*.sqlite3
+*.sqlite3-journal
+db.sqlite3
+static_root/
+media/
+local_settings.py
+
+# ------------------------------------------------------------------------------
+# 5. Node.js, React Native & Expo (Stage 3 Mobile)
+# ------------------------------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Expo & React Native Build Artifacts
+.expo/
+.expo-shared/
+dist/
+web-build/
+.metro-health-check*
+
+# iOS / Android platform native builds (if prebuilt)
+ios/
+android/
+*.ipa
+*.apk
+*.aab
+
+# ------------------------------------------------------------------------------
+# 6. IDEs & Text Editors
+# ------------------------------------------------------------------------------
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+*.bak
+
+# ------------------------------------------------------------------------------
+# 7. Multi-Tenant User Uploads & Temporary Ingestion Data
+# ------------------------------------------------------------------------------
+# Ignore dynamically uploaded customer/tenant documents while preserving base dataset
+**/dataset_for_ml/+*/
+**/.temp_assets/
+*.tmp
+
+# ------------------------------------------------------------------------------
+# 8. General Logs & Runtime Data
+# ------------------------------------------------------------------------------
+*.log
+logs/
+run/

@@ -1,0 +1,372 @@
+{% extends 'ocr_web/base.html' %}
+
+{% block content %}
+<script>
+    window.IS_TEST_MODE = {{ test_mode|yesno:"true,false" }};
+</script>
+<div class="dashboard-grid">
+    <!-- Top Executive Action Hub: ML Model Training & System Stats -->
+    <section class="executive-card training-hero-card">
+        <div class="card-header-flex">
+            <div class="header-icon-title">
+                <div class="icon-wrap bg-purple"><i class="fa-solid fa-microchip"></i></div>
+                <div>
+                    <h2>Stage 1 Machine Learning Training Center</h2>
+                    <p class="subtitle">Consumes Base Corpus (Input 1) + All Multi-Tenant User Datasets (Input 2) &bull; Output: ./output/model/</p>
+                </div>
+            </div>
+            
+            <!-- StartLearnModelButton as requested in run1.docx -->
+            <div class="action-btn-group" style="display: flex; gap: 10px; align-items: center;">
+                <button type="button" id="StartLearnModelButton" class="btn-primary-action" onclick="triggerModelTraining()">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    <span>StartLearnModelButton</span>
+                </button>
+                <a href="/results/ML_REPORT.html" target="_blank" class="btn-secondary-sm" id="btn-view-ml-report" title="Open Learning Report">
+                    <i class="fa-solid fa-file-lines"></i> View ML Report
+                </a>
+            </div>
+        </div>
+
+        <div id="training-status-box" class="training-status-panel hidden">
+            <div class="progress-bar-container">
+                <div id="training-progress-bar" class="progress-bar-fill"></div>
+            </div>
+            <div class="training-log-flex">
+                <span id="training-status-message"><i class="fa-solid fa-spinner fa-spin"></i> Training ML Classifier across multi-tenant corpus...</span>
+                <span id="training-status-time"></span>
+            </div>
+        </div>
+
+        <!-- Dynamic Training Metrics Bar -->
+        <div id="metrics-grid" class="metrics-grid">
+            <div class="metric-box">
+                <span class="metric-label">Model Accuracy</span>
+                <span class="metric-value text-emerald" id="metric-accuracy">98.8%</span>
+            </div>
+            <div class="metric-box">
+                <span class="metric-label">Classification Classes</span>
+                <span class="metric-value" id="metric-classes">6 Active</span>
+            </div>
+            <div class="metric-box">
+                <span class="metric-label">Trained Corpus Docs</span>
+                <span class="metric-value" id="metric-docs">16 Samples</span>
+            </div>
+            <div class="metric-box">
+                <span class="metric-label">Multi-Tenant Ingestion</span>
+                <span class="metric-value text-sky" id="metric-users">./dataset_for_ml/+*</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Operational Workspace: Document Selection, CAPTCHA, Recognition -->
+    <div class="operational-split-layout">
+        <!-- Left Panel: Document Ingestion & Verification Controls -->
+        <section class="executive-card ingestion-panel">
+            <div class="panel-header">
+                <h3><i class="fa-solid fa-file-arrow-up"></i> Document Processing Station</h3>
+                <span class="badge-single-file">Single File Only</span>
+            </div>
+
+            <!-- SelectDocumentButton as requested in run1.docx -->
+            <div class="drop-zone-container" id="drop-zone">
+                <input type="file" id="documentFileInput" accept=".pdf,.png,.jpg,.jpeg,.tiff,.bmp,.webp" style="display: none;" onchange="handleFileSelected(event)">
+                
+                <div class="drop-zone-content" id="drop-zone-prompt">
+                    <div class="upload-icon-circle">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <h4>Drop Document Here (PDF or Image)</h4>
+                    <p>Single document upload &bull; Supports PDF, PNG, JPG, TIFF, WEBP</p>
+                    
+                    <button type="button" id="SelectDocumentButton" class="btn-select-doc" onclick="document.getElementById('documentFileInput').click()">
+                        <i class="fa-solid fa-folder-open"></i> SelectDocumentButton
+                    </button>
+                </div>
+
+                <!-- Selected File Card (Visible after selection) -->
+                <div class="file-preview-card hidden" id="file-preview-card">
+                    <div class="file-preview-icon" id="file-icon-preview">
+                        <i class="fa-solid fa-file-pdf"></i>
+                    </div>
+                    <div class="file-preview-details">
+                        <div class="file-name-row">
+                            <strong id="preview-file-name">document.pdf</strong>
+                            <button type="button" class="btn-remove-file" onclick="removeSelectedFile()" title="Clear Selection">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                        <div class="file-meta-row">
+                            <span id="preview-file-size">1.2 MB</span> &bull; 
+                            <span id="preview-file-type">application/pdf</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multi-tenant dataset contribution checkbox -->
+            <div class="form-check-group">
+                <label class="checkbox-container">
+                    <input type="checkbox" id="contributeToDataset" checked>
+                    <span class="checkmark"></span>
+                    <span class="check-text">Contribute copy to user training dataset (<code>./dataset_for_ml/+{{ user_email }}</code>)</span>
+                </label>
+            </div>
+
+            <!-- Small Local CAPTCHA Component (Bypassed if TEST_MODE is true) -->
+            {% if test_mode %}
+            <div class="captcha-box-card" id="captcha-container" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.05);">
+                <div class="captcha-header">
+                    <span><i class="fa-solid fa-flask" style="color: #10b981;"></i> Security Verification</span>
+                    <span class="badge-pill bg-success" style="font-size: 11px;"><i class="fa-solid fa-circle-check"></i> TEST_MODE: Bypassed</span>
+                </div>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+                    Environment variable <code>TEST_MODE=true</code> is active. CAPTCHA verification is automatically passed.
+                </p>
+            </div>
+            {% else %}
+            <div class="captcha-box-card" id="captcha-container">
+                <div class="captcha-header">
+                    <span><i class="fa-solid fa-shield-halved"></i> Security Verification (Local CAPTCHA)</span>
+                    <button type="button" class="btn-refresh-captcha" onclick="refreshCaptcha()" title="Get new challenge">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </button>
+                </div>
+                <div class="captcha-body">
+                    <div class="captcha-challenge-badge" id="captcha-challenge-display">
+                        {{ captcha_text }}
+                    </div>
+                    <div class="captcha-input-wrap">
+                        <input type="text" id="captcha-answer-input" placeholder="Answer" autocomplete="off" onkeyup="checkCaptchaLive()">
+                        <button type="button" class="btn-verify-captcha" onclick="verifyCaptchaAction()">
+                            <i class="fa-solid fa-check"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="captcha-status-msg" class="captcha-status-text">
+                    Please solve the math puzzle to enable recognition.
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- RecognizeDdocumentButton as requested in run1.docx -->
+            <!-- Available only after SelectDocumentButton file is selected and CAPTCHA is solved (or TEST_MODE is true) -->
+            <div class="action-submit-wrap">
+                <button type="button" id="RecognizeDdocumentButton" class="btn-recognize-disabled" disabled onclick="executeDocumentRecognition()">
+                    <span class="btn-icon"><i class="fa-solid fa-brain"></i></span>
+                    <span class="btn-text">RecognizeDdocumentButton</span>
+                </button>
+                <p id="recognize-hint" class="hint-text">
+                    <i class="fa-solid fa-lock"></i> Locked: Select 1 document to unlock.
+                </p>
+            </div>
+        </section>
+
+        <!-- Right Panel: Recognition Results Dashboard & Auto-Download Hub -->
+        <section class="executive-card results-panel">
+            <div class="panel-header">
+                <div class="title-with-badge">
+                    <h3><i class="fa-solid fa-square-poll-vertical"></i> Structured Recognition Output</h3>
+                    <span class="badge-pill bg-gray" id="doc-type-badge">AWAITING INPUT</span>
+                </div>
+                
+                <div class="results-actions" id="results-action-buttons">
+                    <button type="button" class="btn-secondary-sm" id="btn-manual-download" disabled onclick="downloadJsonFileDirectly()">
+                        <i class="fa-solid fa-download"></i> Download JSON
+                    </button>
+                </div>
+            </div>
+
+            <!-- Live Scanning Overlay (while analyzing) -->
+            <div id="scanning-overlay" class="scanning-state-view hidden">
+                <div class="scanner-laser"></div>
+                <div class="spinner-pulse">
+                    <i class="fa-solid fa-arrows-spin fa-spin"></i>
+                </div>
+                <h4>Executing Multi-Tier OCR & ML Classification...</h4>
+                <p>Analyzing document geometry, neural tokens, and financial entities</p>
+            </div>
+
+            <!-- Empty State Placeholder -->
+            <div id="results-placeholder" class="empty-state-view">
+                <div class="empty-icon"><i class="fa-solid fa-receipt"></i></div>
+                <h4>No Document Processed Yet</h4>
+                <p>Select a PDF or Image using <strong>SelectDocumentButton</strong> on the left, solve the local CAPTCHA, and click <strong>RecognizeDdocumentButton</strong>.</p>
+                <div class="sample-loader-shortcut">
+                    <span>Or quick-test with a sample:</span>
+                    <button type="button" class="btn-sample-shortcut" onclick="loadSampleDocument()">
+                        <i class="fa-solid fa-bolt"></i> Load Sample Medical Invoice
+                    </button>
+                </div>
+            </div>
+
+            <!-- Extracted Data Dashboard (Visible on result) -->
+            <div id="results-data-container" class="results-content-view hidden">
+                <!-- Autodownload notification alert -->
+                <div class="autodownload-toast" id="autodownload-alert">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span><strong>Auto-Download Complete:</strong> Recognized JSON response saved to your local device.</span>
+                </div>
+
+                <!-- KPI Summary Strip -->
+                <div class="kpi-strip">
+                    <div class="kpi-card">
+                        <span class="kpi-title">Document Type</span>
+                        <strong class="kpi-val" id="res-kpi-type">COMMERCIAL_INVOICE</strong>
+                        <span class="kpi-sub" id="res-kpi-conf">Confidence: 99.4%</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-title">Total Amount</span>
+                        <strong class="kpi-val text-emerald" id="res-kpi-total">$4,730.00</strong>
+                        <span class="kpi-sub" id="res-kpi-tax">Tax/VAT: $430.00</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-title">Document Reference</span>
+                        <strong class="kpi-val" id="res-kpi-docnum">INV-2026-8819</strong>
+                        <span class="kpi-sub" id="res-kpi-date">Date: 2026-08-20</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-title">Processing Time</span>
+                        <strong class="kpi-val text-sky" id="res-kpi-time">142 ms</strong>
+                        <span class="kpi-sub" id="res-kpi-pages">1 Page &bull; ML v2.1.0</span>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="tabs-header">
+                    <button type="button" class="tab-btn active" onclick="switchResultTab('entities')"><i class="fa-solid fa-list-check"></i> Extracted Requisites</button>
+                    <button type="button" class="tab-btn" onclick="switchResultTab('items')"><i class="fa-solid fa-table-list"></i> Line Items Table</button>
+                    <button type="button" class="tab-btn" onclick="switchResultTab('json')"><i class="fa-solid fa-code"></i> Raw JSON Response</button>
+                    <button type="button" class="tab-btn" onclick="switchResultTab('text')"><i class="fa-solid fa-align-left"></i> Raw OCR Text</button>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="tab-body-container">
+                    <!-- Tab 1: Requisites & Barcodes -->
+                    <div class="tab-pane active" id="tab-entities">
+                        <!-- Header Barcodes / QR Strip -->
+                        <div id="header-barcodes-container" class="barcode-banner-container">
+                            <span class="barcode-banner-title"><i class="fa-solid fa-barcode"></i> Header Barcodes & QR Codes:</span>
+                            <div id="header-barcodes-list" class="barcode-chips-row">
+                                <span class="badge-pill bg-gray">Scanning document header...</span>
+                            </div>
+                        </div>
+
+                        <div class="requisites-grid" style="margin-top: 12px;">
+                            <div class="req-row"><span class="req-label">Sender / Biller:</span><span class="req-val" id="res-sender">Global Tech Solutions Inc.</span></div>
+                            <div class="req-row"><span class="req-label">Recipient / Consignee:</span><span class="req-val" id="res-recipient">Quantum Innovations Ltd</span></div>
+                            <div class="req-row"><span class="req-label">Issue Date:</span><span class="req-val" id="res-date">2026-08-20</span></div>
+                            <div class="req-row"><span class="req-label">Payment Due Date:</span><span class="req-val" id="res-duedate">2026-09-20</span></div>
+                            <div class="req-row"><span class="req-label">Subtotal:</span><span class="req-val" id="res-subtotal">$4,300.00</span></div>
+                            <div class="req-row"><span class="req-label">Tax / VAT Assessment:</span><span class="req-val" id="res-tax">$430.00 (10.0%)</span></div>
+                            <div class="req-row highlight-row"><span class="req-label">Total Payable:</span><span class="req-val text-emerald" id="res-total">$4,730.00 USD</span></div>
+                        </div>
+
+                        <!-- Footer Barcodes / QR Strip -->
+                        <div id="footer-barcodes-container" class="barcode-banner-container" style="margin-top: 14px;">
+                            <span class="barcode-banner-title"><i class="fa-solid fa-qrcode"></i> Footer Barcodes & Verification QR Codes:</span>
+                            <div id="footer-barcodes-list" class="barcode-chips-row">
+                                <span class="badge-pill bg-gray">Scanning document footer...</span>
+                            </div>
+                        </div>
+
+                        <!-- Domain Specific (e.g. Medical Pharma codes) -->
+                        <div id="domain-specific-section" class="domain-cards-row"></div>
+                    </div>
+
+                    <!-- Tab 2: Line Items Table -->
+                    <div class="tab-pane" id="tab-items">
+                        <div class="table-responsive item-table-mobile-scroll" id="items-table-scroll-container">
+                            <table class="executive-table items-table-compact">
+                                <thead>
+                                    <tr>
+                                        <th class="col-desc">Description</th>
+                                        <th class="col-barcode">Barcode / QR Code</th>
+                                        <th class="col-qty">Qty</th>
+                                        <th class="col-price">Unit Price</th>
+                                        <th class="col-total">Total Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="res-items-tbody">
+                                    <!-- Populated via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Total Info Summary Below Items Table -->
+                        <div class="items-total-info-card" id="items-tab-total-card">
+                            <div class="total-info-header">
+                                <span><i class="fa-solid fa-calculator"></i> Total Financial Summary</span>
+                                <span class="badge-pill bg-gray" id="items-count-badge">0 Items</span>
+                            </div>
+                            <div class="total-info-grid">
+                                <div class="total-info-row">
+                                    <span class="total-info-label">Calculated Items Sum:</span>
+                                    <span class="total-info-val" id="items-tab-calc-sum">$0.00</span>
+                                </div>
+                                <div class="total-info-row">
+                                    <span class="total-info-label">Subtotal:</span>
+                                    <span class="total-info-val" id="items-tab-subtotal">$0.00</span>
+                                </div>
+                                <div class="total-info-row">
+                                    <span class="total-info-label">Tax / VAT:</span>
+                                    <span class="total-info-val" id="items-tab-tax">$0.00</span>
+                                </div>
+                                <div class="total-info-row total-info-grand">
+                                    <span class="total-info-label">Total Amount Payable:</span>
+                                    <span class="total-info-val text-emerald" id="items-tab-total">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Colored JSON Response -->
+                    <div class="tab-pane" id="tab-json">
+                        <div class="json-toolbar">
+                            <div class="json-meta-tags">
+                                <span class="badge-pill bg-gray"><i class="fa-solid fa-code"></i> JSON Payload</span>
+                                <span class="badge-pill bg-gray" id="json-size-badge">0 KB</span>
+                            </div>
+                            <button type="button" class="btn-secondary-sm" id="btn-copy-json" onclick="copyJsonToClipboard()">
+                                <i class="fa-solid fa-copy"></i> <span id="copy-btn-text">Copy JSON</span>
+                            </button>
+                        </div>
+                        <pre class="json-code-block"><code id="res-raw-json">{}</code></pre>
+                    </div>
+
+                    <!-- Tab 4: Raw OCR Text -->
+                    <div class="tab-pane" id="tab-text">
+                        <pre class="text-code-block" id="res-raw-text"></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Test Dataset Documents Gallery (from ./dataset_for_tests) -->
+    <section class="executive-card" style="margin-top: 24px;">
+        <div class="panel-header">
+            <div class="title-with-badge">
+                <h3><i class="fa-solid fa-flask-vial"></i> Test Dataset Samples (<code>./dataset_for_tests</code>)</h3>
+                <span class="badge-pill bg-primary" id="test-docs-count-badge">Loading...</span>
+            </div>
+            <div class="results-actions">
+                <a href="/report/pipeline/" class="btn-secondary-sm" target="_blank">
+                    <i class="fa-solid fa-diagram-project"></i> Pipeline Report
+                </a>
+                <a href="/report/ml/" class="btn-secondary-sm" target="_blank">
+                    <i class="fa-solid fa-file-lines"></i> ML Report
+                </a>
+            </div>
+        </div>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+            Explore and download sample test documents from <code>./dataset_for_tests</code>. Click <strong>Use in Test</strong> to automatically load the file into the processing station for immediate extraction and testing.
+        </p>
+        <div id="test-dataset-grid" class="test-dataset-grid">
+            <div style="padding: 24px; text-align: center; color: var(--text-dim); grid-column: 1 / -1;">
+                <i class="fa-solid fa-spinner fa-spin"></i> Loading test documents from <code>./dataset_for_tests</code>...
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

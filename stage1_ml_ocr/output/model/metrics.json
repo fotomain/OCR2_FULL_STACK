@@ -1,0 +1,28 @@
+{
+  "total_samples": 34,
+  "categories_count": 4,
+  "classes": [
+    "COMMERCIAL_INVOICE",
+    "MEDICAL_PHARMA_INVOICE",
+    "PURCHASE_RECEIPT",
+    "TAX_STATEMENT"
+  ],
+  "accuracy": 1.0,
+  "precision_macro": 1.0,
+  "recall_macro": 1.0,
+  "f1_macro": 1.0,
+  "training_duration_seconds": 15.69,
+  "documents_per_user": {
+    "testuser@company.com": 1,
+    "corporate.lead@vita-genomics.org": 1,
+    "executive.analyst@nexus-biomed.org": 8,
+    ".temp_assets": 12,
+    "bob@enterprise.com": 1,
+    "alice@biocorp.com": 5
+  },
+  "confusion_matrix_summary": {
+    "trained_classes": 4,
+    "evaluated_samples": 34,
+    "status": "CONVERGED_OPTIMAL"
+  }
+}

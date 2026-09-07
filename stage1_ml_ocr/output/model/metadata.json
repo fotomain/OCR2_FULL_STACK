@@ -1,0 +1,21 @@
+{
+  "version": "2.1.0",
+  "trained_at": "2026-08-26T13:40:43.967815+00:00",
+  "classes": [
+    "COMMERCIAL_INVOICE",
+    "MEDICAL_PHARMA_INVOICE",
+    "PURCHASE_RECEIPT",
+    "TAX_STATEMENT"
+  ],
+  "sample_count": 34,
+  "base_documents_count": 6,
+  "user_documents_count": 28,
+  "users_included": [
+    "testuser@company.com",
+    "corporate.lead@vita-genomics.org",
+    "executive.analyst@nexus-biomed.org",
+    ".temp_assets",
+    "bob@enterprise.com",
+    "alice@biocorp.com"
+  ]
+}

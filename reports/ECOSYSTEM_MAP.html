@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR2 Enterprise Ecosystem Map & Architecture Landscape</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Mermaid.js for Interactive Ecosystem & Flow Diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            themeVariables: {
+                primaryColor: '#e0e7ff',
+                primaryTextColor: '#1e1b4b',
+                primaryBorderColor: '#6366f1',
+                lineColor: '#4f46e5',
+                secondaryColor: '#f0fdf4',
+                tertiaryColor: '#f8fafc',
+                clusterBkg: '#f8fafc',
+                clusterBorder: '#cbd5e1',
+                defaultLinkColor: '#6366f1',
+                fontFamily: 'Inter, sans-serif',
+                fontSize: '13px'
+            }
+        });
+    </script>
+    <style>
+        :root {
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-surface-elevated: #f1f5f9;
+            --border-color: #e2e8f0;
+            --border-color-strong: #cbd5e1;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-light: #e0e7ff;
+            --primary-glow: rgba(79, 70, 229, 0.15);
+            --accent-emerald: #059669;
+            --accent-emerald-bg: #ecfdf5;
+            --accent-sky: #0284c7;
+            --accent-sky-bg: #f0f9ff;
+            --accent-purple: #7c3aed;
+            --accent-purple-bg: #f5f3ff;
+            --accent-amber: #d97706;
+            --accent-amber-bg: #fffbeb;
+            --accent-rose: #e11d48;
+            --accent-rose-bg: #fff1f2;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-dim: #64748b;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            --shadow-xl: 0 20px 30px -10px rgba(0, 0, 0, 0.07);
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-heading: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.06) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Top Navigation Header */
+        .report-header {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 16px 32px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-content {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #4f46e5, #0284c7);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #fff;
+            box-shadow: 0 4px 16px var(--primary-glow);
+        }
+
+        .logo-text h1 {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+        }
+
+        .badge-verified {
+            font-size: 11px;
+            background: var(--accent-emerald-bg);
+            color: var(--accent-emerald);
+            border: 1px solid rgba(5, 150, 105, 0.3);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-left: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            transition: color 0.2s, background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        /* Container Layout */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 40px 32px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, #e0e7ff 0%, #f0f9ff 50%, #faf5ff 100%);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            margin-bottom: 36px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner h2 {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #1e1b4b;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-banner p {
+            font-size: 16px;
+            color: #334155;
+            max-width: 1050px;
+            margin-bottom: 24px;
+            line-height: 1.65;
+        }
+
+        .meta-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .meta-pill {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .meta-pill i {
+            color: var(--primary);
+        }
+
+        /* KPI Quick Stats Row */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+
+        .kpi-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .kpi-icon-wrap {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .kpi-info h4 {
+            font-size: 24px;
+            font-weight: 800;
+            font-family: var(--font-heading);
+            color: var(--text-main);
+            line-height: 1.1;
+        }
+
+        .kpi-info span {
+            font-size: 12px;
+            color: var(--text-dim);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 36px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+        }
+
+        .section-header .sec-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--primary-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .section-header h3 {
+            font-family: var(--font-heading);
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Diagram / Canvas Wrappers */
+        .canvas-wrapper {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin: 20px 0;
+            overflow-x: auto;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .canvas-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .canvas-title-row h4 {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+        }
+
+        .diagram-caption {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-top: 14px;
+            font-style: italic;
+        }
+
+        /* 3-App Architecture Grid */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 24px;
+            margin: 24px 0;
+        }
+
+        .app-box {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+
+        .app-box:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .app-box-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .app-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: var(--primary-light);
+            color: var(--primary);
+            letter-spacing: 0.5px;
+        }
+
+        .app-box h4 {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .app-box ul {
+            list-style: none;
+            margin: 16px 0;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .app-box ul li {
+            padding: 6px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .app-box ul li i {
+            color: var(--accent-emerald);
+            margin-top: 4px;
+        }
+
+        /* Credentials Spec Card */
+        .creds-card {
+            background: var(--accent-amber-bg);
+            border: 1px solid rgba(217, 119, 6, 0.3);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .creds-card h4 {
+            color: var(--accent-amber);
+            font-size: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+        }
+
+        .code-snippet {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: #38bdf8;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        /* Tables */
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin: 16px 0;
+            background: #ffffff;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .api-table th, .api-table td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .api-table th {
+            background: #f8fafc;
+            color: var(--text-dim);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+
+        .method-badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .method-post {
+            background: var(--accent-emerald-bg);
+            color: var(--accent-emerald);
+            border: 1px solid rgba(5, 150, 105, 0.3);
+        }
+
+        .method-get {
+            background: var(--accent-sky-bg);
+            color: var(--accent-sky);
+            border: 1px solid rgba(2, 132, 199, 0.3);
+        }
+
+        /* Quick Start Terminal Box */
+        .terminal-box {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: var(--radius-md);
+            padding: 24px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: #34d399;
+            margin: 16px 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .terminal-box .cmd {
+            color: #f8fafc;
+            margin: 6px 0;
+        }
+
+        .terminal-box .comment {
+            color: #94a3b8;
+        }
+
+        /* Companion Reports Hub */
+        .reports-hub-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .report-link-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .report-link-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .report-link-card .card-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .report-link-card .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .report-link-card h4 {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .report-link-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        .report-link-card .card-footer-link {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Footer */
+        .report-footer {
+            border-top: 1px solid var(--border-color);
+            padding: 32px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 13px;
+            background: var(--bg-surface);
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation Header -->
+    <header class="report-header">
+        <div class="header-content">
+            <div class="logo-group">
+                <div class="logo-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                <div class="logo-text">
+                    <h1>OCR2 ECOSYSTEM <span class="badge-verified">PRODUCTION ATLAS</span></h1>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="#topology"><i class="fa-solid fa-network-wired"></i> Topology</a>
+                <a href="#tiers"><i class="fa-solid fa-cubes"></i> 3-Tier Core</a>
+                <a href="#data-fabric"><i class="fa-solid fa-database"></i> Data Fabric</a>
+                <a href="#security"><i class="fa-solid fa-shield-halved"></i> Security & OAuth</a>
+                <a href="#api-registry"><i class="fa-solid fa-code"></i> API Registry</a>
+                <a href="#operations"><i class="fa-solid fa-terminal"></i> Operations & Ports</a>
+                <a href="#companion-reports"><i class="fa-solid fa-book-bookmark"></i> Reports Hub</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Hero Summary Banner -->
+        <section class="hero-banner">
+            <h2>OCR2 Enterprise Ecosystem Map & Architecture Landscape</h2>
+            <p>
+                A unified, executive-grade visual atlas of the entire OCR2 multi-tenant document recognition platform. This interactive ecosystem map details microservice boundaries, asynchronous training loops, multi-tenant file-system isolation, Google OAuth 2.0 security, Redux-Saga state mechanics, and live operational ports.
+            </p>
+            <div class="meta-strip">
+                <div class="meta-pill"><i class="fa-solid fa-server"></i> Stage 1: FastAPI (Port 8000)</div>
+                <div class="meta-pill"><i class="fa-solid fa-globe"></i> Stage 2 Web: Django 5.x (Port 8080)</div>
+                <div class="meta-pill"><i class="fa-solid fa-mobile"></i> Stage 3 Mobile: Expo Router MD3 (Port 8081)</div>
+                <div class="meta-pill"><i class="fa-solid fa-microchip"></i> Hybrid OCR + TF-IDF + Logistic Regression</div>
+                <div class="meta-pill"><i class="fa-solid fa-users"></i> Multi-Tenant Isolated Datasets (+user_email)</div>
+                <div class="meta-pill"><i class="fa-solid fa-shield-halved"></i> Google OAuth + Math CAPTCHA Anti-Bot</div>
+            </div>
+        </section>
+
+        <!-- KPI Quick Stats Row -->
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <div class="kpi-icon-wrap" style="background: var(--primary-light); color: var(--primary);">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <div class="kpi-info">
+                    <h4>3 Tiers</h4>
+                    <span>Architecture Layers</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon-wrap" style="background: var(--accent-emerald-bg); color: var(--accent-emerald);">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div class="kpi-info">
+                    <h4>3 Ports</h4>
+                    <span>8000, 8080, 8081</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon-wrap" style="background: var(--accent-sky-bg); color: var(--accent-sky);">
+                    <i class="fa-solid fa-file-invoice"></i>
+                </div>
+                <div class="kpi-info">
+                    <h4>4 Engines</h4>
+                    <span>PyPDF, Plumber, Tesseract, PIL</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon-wrap" style="background: var(--accent-amber-bg); color: var(--accent-amber);">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="kpi-info">
+                    <h4>TF-IDF + LR</h4>
+                    <span>ML Classifier Engine</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon-wrap" style="background: var(--accent-purple-bg); color: var(--accent-purple);">
+                    <i class="fa-solid fa-database"></i>
+                </div>
+                <div class="kpi-info">
+                    <h4>Dual DB</h4>
+                    <span>SQLite (Django + Expo)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1: Interactive Ecosystem Topology Flowchart -->
+        <section class="section-card" id="topology">
+            <div class="section-header">
+                <div class="sec-icon"><i class="fa-solid fa-network-wired"></i></div>
+                <div>
+                    <h3>1. Holistic System Topology & Interaction Architecture</h3>
+                    <p style="font-size: 13px; color: var(--text-muted);">Interactive Mermaid architecture diagram mapping clients, security layers, backend gateways, and data stores</p>
+                </div>
+            </div>
+
+            <div class="canvas-wrapper">
+                <div class="canvas-title-row">
+                    <h4><i class="fa-solid fa-diagram-project"></i> Diagram 1: Full-System Component & Data Flow Interconnection Map</h4>
+                    <span class="meta-pill"><i class="fa-solid fa-circle-nodes"></i> Real-Time Service Topography</span>
+                </div>
+                <div class="mermaid">
+flowchart TB
+    subgraph CLIENTS["Dual Executive Frontends"]
+        WebUser["Executive Web User (Browser)"]
+        MobileUser["Mobile Operator (iOS / Android / Web)"]
+    end
+
+    subgraph SECURITY["Security & Anti-Bot Verification Gateways"]
+        OAuth["Google OAuth 2.0 Provider\n(Client ID & Refresh Token)"]
+        CaptchaWeb["Dynamic Math CAPTCHA\n(Django Session Puzzle)"]
+        CaptchaMobile["Mobile Math CAPTCHA\n(Redux Component State)"]
+    end
+
+    subgraph STAGE2["Stage 2 & 3 Client Applications"]
+        subgraph DJANGO_APP["Stage 2: Django Web Frontend (:8080)"]
+            WebUI["Corporate Responsive Dashboard"]
+            StartLearnBtnWeb["StartLearnModelButton"]
+            SelectDocBtnWeb["SelectDocumentButton (1-File Drag & Drop)"]
+            RecognizeBtnWeb["RecognizeDocumentButton (Locked)"]
+            AutoDownloadWeb["Auto-Download JSON Engine"]
+            DjangoDB[("Django SQLite DB\n(Sessions & Audit)")]
+        end
+
+        subgraph EXPO_APP["Stage 3: React Native Expo Mobile App (:8081)"]
+            ExpoUI["Material Design 3 (MD3) Surface"]
+            CameraOCR["Live Vision Camera Snap"]
+            ReduxSaga["Redux Toolkit + Redux-Saga\n(auth, ocr, history slices)"]
+            ExpoSQLite[("Expo SQLite DB\n(users & scans tables)")]
+        end
+    end
+
+    subgraph STAGE1["Stage 1: Core ML OCR Microservice (:8000)"]
+        FastAPIGW["FastAPI High-Performance Gateway\n(/api/v1/* routes)"]
+        
+        subgraph OCR_LAYER["Multi-Tier OCR Pipeline"]
+            PyPDF["PyPDF / PDFPlumber\n(Direct Text Extraction)"]
+            TesseractOCR["Tesseract OCR Fallback\n(PIL Greyscale, Threshold, Deskew)"]
+        end
+
+        subgraph ML_LAYER["Machine Learning Classifier Pipeline"]
+            TFIDF["TF-IDF Vectorizer\n(Sublinear TF, N-grams 1-2)"]
+            Classifier["Balanced Logistic Regression / SGD\n(Multi-class Category Classifier)"]
+            EntityParser["Regex Entity & Tax Requisite Parser\n(INN, Invoice #, Date, Amount, Tables)"]
+        end
+    end
+
+    subgraph STORAGE["Enterprise Data Fabric & Model Repositories"]
+        DatasetBase[("./dataset_for_ml/\n(Input 1: Base Corpus)")]
+        DatasetUser[("./dataset_for_ml/+user_email/\n(Input 2: Multi-Tenant Uploads)")]
+        ModelArtifacts[("./output/model/\n(model.joblib, vectorizer.joblib, metrics.json)")]
+        DatasetTests[("./dataset_for_tests/\n(Verification Golden Corpus)")]
+        ResultsDir[("./results/\n(JSON Logs & Historical Audits)")]
+    end
+
+    %% Client Interactions
+    WebUser -->|1. Authenticate| OAuth
+    WebUser -->|2. Access Web UI| WebUI
+    WebUI --> CaptchaWeb
+    CaptchaWeb -->|Validate Solution| RecognizeBtnWeb
+    WebUI --> SelectDocBtnWeb
+    SelectDocBtnWeb --> RecognizeBtnWeb
+    WebUI --> StartLearnBtnWeb
+
+    MobileUser -->|1. Sign-In Session| OAuth
+    MobileUser -->|2. Mobile App| ExpoUI
+    ExpoUI --> CameraOCR
+    CameraOCR --> ReduxSaga
+    ExpoUI --> CaptchaMobile
+    CaptchaMobile --> ReduxSaga
+    ReduxSaga --> ExpoSQLite
+
+    %% Frontend to Backend Connections
+    StartLearnBtnWeb -->|POST /api/v1/model/train| FastAPIGW
+    RecognizeBtnWeb -->|POST /api/v1/ocr/recognize| FastAPIGW
+    ReduxSaga -->|POST /api/v1/ocr/recognize| FastAPIGW
+    ReduxSaga -->|POST /api/v1/model/train| FastAPIGW
+
+    %% Stage 1 Processing
+    FastAPIGW --> OCR_LAYER
+    OCR_LAYER --> ML_LAYER
+    ML_LAYER --> EntityParser
+    EntityParser -->|Return RecognitionResponse JSON| FastAPIGW
+
+    %% Backend to Data Fabric
+    FastAPIGW -->|Read Base Corpus| DatasetBase
+    FastAPIGW -->|Ingest / Read User Files| DatasetUser
+    FastAPIGW -->|Load / Save Serialized Weights| ModelArtifacts
+    FastAPIGW -->|Log Results| ResultsDir
+
+    %% Auto-Download loop
+    FastAPIGW -.->|Stream JSON| AutoDownloadWeb
+    AutoDownloadWeb -.->|Save recognition_result_*.json| WebUser
+                </div>
+                <p class="diagram-caption">Figure 1.1: Complete systemic interconnection topology — illustrating multi-client requests, verification checkpoints, ML processing pipeline, and storage subsystems.</p>
+            </div>
+        </section>
+
+        <!-- Section 2: 3-Tier Core Breakdown -->
+        <section class="section-card" id="tiers">
+            <div class="section-header">
+                <div class="sec-icon"><i class="fa-solid fa-cubes"></i></div>
+                <div>
+                    <h3>2. Three-Tier Architectural Core Breakdown</h3>
+                    <p style="font-size: 13px; color: var(--text-muted);">Exhaustive component profiles for Stage 1 FastAPI, Stage 2 Django, and Stage 3 Expo Mobile</p>
+                </div>
+            </div>
+
+            <div class="apps-grid">
+                <!-- Tier 1: FastAPI -->
+                <div class="app-box">
+                    <div>
+                        <div class="app-box-header">
+                            <span class="app-badge">STAGE 1 &bull; CORE BACKEND</span>
+                            <span class="meta-pill" style="padding: 4px 10px; font-size: 11px;"><i class="fa-solid fa-bolt"></i> Port 8000</span>
+                        </div>
+                        <h4>stage1_ml_ocr (Python FastAPI)</h4>
+                        <p style="font-size: 13px; color: var(--text-dim);">High-throughput machine learning inference, hybrid OCR fallback, and multi-tenant corpus training engine.</p>
+                        <ul>
+                            <li><i class="fa-solid fa-check"></i> <strong>Execution Engine:</strong> FastAPI + Uvicorn ASGI server with hot-reload support.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Hybrid OCR Stack:</strong> PyPDF & PDFPlumber (direct vector text extraction) with automatic Tesseract OCR fallback for scanned images.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>ML Training Pipeline:</strong> Scikit-learn Pipeline combining TF-IDF N-gram vectorizer with balanced Logistic Regression classifier.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Corpus Ingestion:</strong> Ingests Input 1 (<code>./dataset_for_ml/</code>) + Input 2 (<code>./dataset_for_ml/+user_email</code>).</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Model Persistence:</strong> Dumps <code>model.joblib</code>, <code>vectorizer.joblib</code>, <code>label_encoder.joblib</code>, and <code>metrics.json</code> into <code>./output/model/</code>.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Entity & Requisite Parser:</strong> Extracts Tax ID (INN), invoice numbers, dates, currency amounts, and tabular line items.</li>
+                        </ul>
+                    </div>
+                    <div style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 12px; font-size: 12px; color: var(--text-dim);">
+                        <strong>Location:</strong> <code>./stage1_ml_ocr/</code> &bull; <strong>Runner:</strong> <code>./run_stage1_ml_ocr</code>
+                    </div>
+                </div>
+
+                <!-- Tier 2: Django Web -->
+                <div class="app-box">
+                    <div>
+                        <div class="app-box-header">
+                            <span class="app-badge" style="background: var(--accent-emerald-bg); color: var(--accent-emerald);">STAGE 2 &bull; WEB DASHBOARD</span>
+                            <span class="meta-pill" style="padding: 4px 10px; font-size: 11px;"><i class="fa-solid fa-globe"></i> Port 8080</span>
+                        </div>
+                        <h4>stage2_frontend_web (Python Django 5.x)</h4>
+                        <p style="font-size: 13px; color: var(--text-dim);">Corporate executive web dashboard providing verified single-file document upload, anti-bot validation, and instant JSON exports.</p>
+                        <ul>
+                            <li><i class="fa-solid fa-check"></i> <strong>Google OAuth 2.0:</strong> Native authentication with pre-configured Client ID & Refresh token.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>StartLearnModelButton:</strong> Triggers asynchronous background model retraining with animated progress spinner and KPI readouts.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>SelectDocumentButton:</strong> Drag-and-drop file uploader enforcing <strong>strictly one file</strong> (PDF, PNG, JPG, TIFF).</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Local Anti-Bot CAPTCHA:</strong> Dynamic mathematical arithmetic puzzle ensuring verified human submission.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>RecognizeDocumentButton:</strong> Conditional lock ensuring button activates <em>only</em> after file selection + CAPTCHA resolution.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Auto-Download JSON:</strong> Instant client-side Blob generation automatically saving <code>recognition_result_*.json</code>.</li>
+                        </ul>
+                    </div>
+                    <div style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 12px; font-size: 12px; color: var(--text-dim);">
+                        <strong>Location:</strong> <code>./stage2_frontend_web/</code> &bull; <strong>Runner:</strong> <code>./run_stage2_frontend_web</code>
+                    </div>
+                </div>
+
+                <!-- Tier 3: Expo Mobile -->
+                <div class="app-box">
+                    <div>
+                        <div class="app-box-header">
+                            <span class="app-badge" style="background: var(--accent-sky-bg); color: var(--accent-sky);">STAGE 3 &bull; MOBILE & WEB</span>
+                            <span class="meta-pill" style="padding: 4px 10px; font-size: 11px;"><i class="fa-solid fa-mobile-screen"></i> Port 8081</span>
+                        </div>
+                        <h4>stage3_frontend_mobile (React Native Expo MD3)</h4>
+                        <p style="font-size: 13px; color: var(--text-dim);">Cross-platform mobile and web client featuring Material Design 3, Redux-Saga async architecture, and Expo SQLite storage.</p>
+                        <ul>
+                            <li><i class="fa-solid fa-check"></i> <strong>UI Design System:</strong> React Native Paper Material Design 3 (MD3) with curated slate/indigo typography.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Redux State Machine:</strong> Redux Toolkit (<code>authSlice</code>, <code>ocrSlice</code>, <code>historySlice</code>) coupled with Redux-Saga side-effect orchestration.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Expo SQLite Multi-Tenant DB:</strong> Persistent relational tables (<code>users</code>, <code>scans</code>) providing multi-persona account switching.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Live Camera Snap:</strong> Instant document photo capture automatically bound to the recognition queue.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Full Feature Parity:</strong> Same StartLearnModelButton, SelectDocumentButton, CAPTCHA puzzle, and auto-download engine.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Expo Router:</strong> File-based cross-platform navigation for iOS, Android, and Web preview.</li>
+                        </ul>
+                    </div>
+                    <div style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 12px; font-size: 12px; color: var(--text-dim);">
+                        <strong>Location:</strong> <code>./stage3_frontend_mobile/</code> &bull; <strong>Runner:</strong> <code>./run_stage3_frontend_mobile</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Data Fabric & File Repository Map -->
+        <section class="section-card" id="data-fabric">
+            <div class="section-header">
+                <div class="sec-icon"><i class="fa-solid fa-database"></i></div>
+                <div>
+                    <h3>3. Data Fabric & Storage Architecture</h3>
+                    <p style="font-size: 13px; color: var(--text-muted);">Mapping physical file systems, training corpora, model serialization artifacts, and database instances</p>
+                </div>
+            </div>
+
+            <div class="canvas-wrapper">
+                <div class="canvas-title-row">
+                    <h4><i class="fa-solid fa-folder-tree"></i> Diagram 2: Ingestion, Storage & Weight Serialization Lifecycle</h4>
+                    <span class="meta-pill"><i class="fa-solid fa-hard-drive"></i> Storage Subsystems</span>
+                </div>
+                <div class="mermaid">
+flowchart LR
+    subgraph INGESTION["Multi-Tenant Ingestion Sources"]
+        BaseFiles["Input 1: Base Corpus\n./dataset_for_ml/*.pdf, *.png"]
+        UserFiles["Input 2: Multi-Tenant Ingestion\n./dataset_for_ml/+user_email/*.*"]
+    end
+
+    subgraph TRAINING["Stage 1 Training Engine"]
+        Scanner["Corpus Directory Scanner"]
+        OCRPre["OCR Feature Extractor"]
+        VectorMatrix["TF-IDF Matrix Generator"]
+        Estimator["Logistic Regression Trainer"]
+    end
+
+    subgraph MODEL_OUTPUT["Serialized Model Artifacts (./output/model/)"]
+        M1["model.joblib\n(Classifier Weights)"]
+        M2["vectorizer.joblib\n(TF-IDF Vocabulary)"]
+        M3["label_encoder.joblib\n(Category Mappings)"]
+        M4["metrics.json\n(Accuracy, F1, Loss)"]
+        M5["metadata.json\n(Model v2.1.0 Timestamp)"]
+    end
+
+    subgraph DATABASES["Persistent Database Storage"]
+        DjangoDB[("Django SQLite DB\nstage2_frontend_web/db.sqlite3\n• Sessions\n• Admin Audit Logs")]
+        ExpoDB[("Expo SQLite DB\nstage3_frontend_mobile\n• users table\n• scans table")]
+    end
+
+    BaseFiles --> Scanner
+    UserFiles --> Scanner
+    Scanner --> OCRPre
+    OCRPre --> VectorMatrix
+    VectorMatrix --> Estimator
+    Estimator --> M1
+    Estimator --> M2
+    Estimator --> M3
+    Estimator --> M4
+    Estimator --> M5
+                </div>
+                <p class="diagram-caption">Figure 2.1: Data fabric lifecycle illustrating how multi-source raw documents flow through OCR and TF-IDF pipelines into persistent joblib weights and relational SQLite tables.</p>
+            </div>
+
+            <table class="api-table">
+                <thead>
+                    <tr>
+                        <th>Repository Path</th>
+                        <th>Classification</th>
+                        <th>Purpose & Description</th>
+                        <th>Data Isolation Model</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>./dataset_for_ml/</code></td>
+                        <td>Input 1 (Base Corpus)</td>
+                        <td>Initial foundational training set of invoice, medical, and tax PDF/image documents.</td>
+                        <td>Global Read-Only base corpus shared across all tenants.</td>
+                    </tr>
+                    <tr>
+                        <td><code>./dataset_for_ml/+user_email/</code></td>
+                        <td>Input 2 (User Contributed)</td>
+                        <td>Dynamically generated user directories storing tenant-contributed training documents.</td>
+                        <td><strong>Strict Tenant Isolation</strong> via email folder prefixes (e.g. <code>+ceo@corp.com</code>).</td>
+                    </tr>
+                    <tr>
+                        <td><code>./dataset_for_tests/</code></td>
+                        <td>Evaluation Dataset</td>
+                        <td>Fixed validation and regression testing documents used by automated test suites.</td>
+                        <td>Static reference test bench.</td>
+                    </tr>
+                    <tr>
+                        <td><code>./output/model/</code></td>
+                        <td>Model Artifacts</td>
+                        <td>Persistent serialized ML model weights (<code>model.joblib</code>, <code>vectorizer.joblib</code>, metrics).</td>
+                        <td>Single active deployment version serving real-time inference.</td>
+                    </tr>
+                    <tr>
+                        <td><code>./results/</code></td>
+                        <td>Inference Logs</td>
+                        <td>Historical JSON output records generated by document recognition calls.</td>
+                        <td>Audit trail and performance benchmarking.</td>
+                    </tr>
+                    <tr>
+                        <td><code>stage2_frontend_web/db.sqlite3</code></td>
+                        <td>Django ORM Database</td>
+                        <td>Stores user sessions, authentication tokens, and administrative audit events.</td>
+                        <td>Encrypted session storage.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 4: Security & Authentication -->
+        <section class="section-card" id="security">
+            <div class="section-header">
+                <div class="sec-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <div>
+                    <h3>4. Security, Google OAuth & Anti-Bot Architecture</h3>
+                    <p style="font-size: 13px; color: var(--text-muted);">Double-layer authentication: Google OAuth 2.0 corporate credentials + dynamic local mathematical CAPTCHA</p>
+                </div>
+            </div>
+
+            <div class="creds-card">
+                <h4><i class="fa-solid fa-key"></i> Google OAuth 2.0 Security Configuration</h4>
+                <pre class="code-snippet">
+GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_REFRESH_TOKEN=your-google-refresh-token
+                </pre>
+            </div>
+
+            <div class="apps-grid" style="margin-top: 20px;">
+                <div class="app-box">
+                    <div>
+                        <h4>Google OAuth 2.0 Handshake</h4>
+                        <ul>
+                            <li><i class="fa-solid fa-lock"></i> <strong>Web Flow:</strong> Django redirects to Google authorization consent; upon callback, exchanges authorization code for refresh/access tokens.</li>
+                            <li><i class="fa-solid fa-lock"></i> <strong>Mobile Flow:</strong> Expo <code>AuthSession</code> initiates secure native browser authentication and parses authorization response.</li>
+                            <li><i class="fa-solid fa-lock"></i> <strong>Session Management:</strong> Tokens securely cached; user profiles synced to SQLite <code>users</code> table.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="app-box">
+                    <div>
+                        <h4>Local Anti-Bot CAPTCHA Protection</h4>
+                        <ul>
+                            <li><i class="fa-solid fa-calculator"></i> <strong>Dynamic Math Puzzle:</strong> Generates randomized arithmetic equations (e.g. <code>14 + 7 = ?</code>) per session.</li>
+                            <li><i class="fa-solid fa-shield"></i> <strong>Conditional UI Locking:</strong> <code>RecognizeDocumentButton</code> remains strictly disabled until the math challenge is solved.</li>
+                            <li><i class="fa-solid fa-robot"></i> <strong>Zero External Reliance:</strong> Operates entirely client/session side with zero third-party tracking or latency.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: API Registry -->
+        <section class="section-card" id="api-registry">
+            <div class="section-header">
+                <div class="sec-icon"><i class="fa-solid fa-code"></i></div>
+                <div>
+                    <h3>5. Comprehensive API & Route Directory</h3>
+                    <p style="font-size: 13px; color: var(--text-muted);">Specification of RESTful interfaces across the Stage 1 FastAPI engine and Stage 2 Django backend</p>
+                </div>
+            </div>
+
+            <table class="api-table">
+                <thead>
+                    <tr>
+                        <th>Tier</th>
+                        <th>Method</th>
+                        <th>Endpoint</th>
+                        <th>Parameters / Request Body</th>
+                        <th>Response Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Stage 1</strong></td>
+                        <td><span class="method-badge method-post">POST</span></td>
+                        <td><code>/api/v1/ocr/recognize</code></td>
+                        <td><code>file</code> (UploadFile), <code>user_email</code> (str), <code>save_to_dataset</code> (bool)</td>
+                        <td>Returns structured <code>RecognitionResponse</code> JSON with requisites, line items, and confidence.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stage 1</strong></td>
+                        <td><span class="method-badge method-post">POST</span></td>
+                        <td><code>/api/v1/model/train</code></td>
+                        <td>None (Triggers scan over <code>./dataset_for_ml/</code>)</td>
+                        <td>Asynchronously retrains model on all tenant data and updates serialized weights.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stage 1</strong></td>
+                        <td><span class="method-badge method-get">GET</span></td>
+                        <td><code>/api/v1/model/status</code></td>
+                        <td>None</td>
+                        <td>Returns current model status, version (v2.1.0), training timestamp, and accuracy metrics.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stage 1</strong></td>
+                        <td><span class="method-badge method-post">POST</span></td>
+                        <td><code>/api/v1/dataset/upload</code></td>
+                        <td><code>file</code> (UploadFile), <code>user_email</code> (Form str)</td>
+                        <td>Saves contribution directly into isolated directory <code>./dataset_for_ml/+user_email</code>.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stage 1</strong></td>
+                        <td><span class="method-badge method-get">GET</span></td>
+                        <td><code>/api/v1/dataset/stats</code></td>
+                        <td>None</td>
+                        <td>Returns detailed file counts across base corpus and individual user partitions.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stage 1</strong></td>
+                        <td><span class="method-badge method-get">GET</span></td>
+                        <td><code>/health</code></td>
+                        <td>None</td>
+                        <td>Returns <code>{"status": "healthy"}</code> probe for orchestration liveness checks.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stage 2</strong></td>
+                        <td><span class="method-badge method-get">GET</span></td>
+                        <td><code>/</code></td>
+                        <td>Session Cookie</td>
+                        <td>Renders executive Django web dashboard with upload forms and live KPI components.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stage 2</strong></td>
+                        <td><span class="method-badge method-post">POST</span></td>
+                        <td><code>/recognize-proxy/</code></td>
+                        <td><code>document</code> (File), <code>captcha_answer</code> (str)</td>
+                        <td>Verifies CAPTCHA and proxies recognition request to Stage 1 FastAPI backend.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stage 3</strong></td>
+                        <td><span class="method-badge method-get">GET</span></td>
+                        <td><code>/</code></td>
+                        <td>Web Browser / Metro</td>
+                        <td>Serves React Native Expo web bundle on port 8081 with MD3 theme and SQLite store.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 6: Operations & Port Registry -->
+        <section class="section-card" id="operations">
+            <div class="section-header">
+                <div class="sec-icon"><i class="fa-solid fa-terminal"></i></div>
+                <div>
+                    <h3>6. Operational Topology, Ports & Orchestration Commands</h3>
+                    <p style="font-size: 13px; color: var(--text-muted);">Unified process management with port-conflict safeguards and one-click execution</p>
+                </div>
+            </div>
+
+            <table class="api-table" style="margin-bottom: 24px;">
+                <thead>
+                    <tr>
+                        <th>Port</th>
+                        <th>Bound Service</th>
+                        <th>Protocol / Framework</th>
+                        <th>Health Check URL</th>
+                        <th>Launch Script</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>8000</strong></td>
+                        <td>Stage 1 ML OCR Backend</td>
+                        <td>HTTP / FastAPI + Uvicorn</td>
+                        <td><code>http://127.0.0.1:8000/health</code></td>
+                        <td><code>./run_stage1_ml_ocr</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>8080</strong></td>
+                        <td>Stage 2 Web Frontend</td>
+                        <td>HTTP / Django 5.x WSGI</td>
+                        <td><code>http://127.0.0.1:8080/</code></td>
+                        <td><code>./run_stage2_frontend_web</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>8081</strong></td>
+                        <td>Stage 3 Mobile Expo App</td>
+                        <td>HTTP / Metro Bundler + Web</td>
+                        <td><code>http://localhost:8081/</code></td>
+                        <td><code>./run_stage3_frontend_mobile</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="terminal-box">
+                <div class="comment"># 1. Launch all 3 services concurrently with automatic port cleanup:</div>
+                <div class="cmd">./start_all.sh</div>
+                <br>
+                <div class="comment"># 2. Or launch individual components:</div>
+                <div class="cmd">./stage1_ml_ocr/run.sh         <span class="comment"># FastAPI Backend (http://127.0.0.1:8000)</span></div>
+                <div class="cmd">./stage2_frontend_web/run.sh     <span class="comment"># Django Web Frontend (http://127.0.0.1:8080)</span></div>
+                <div class="cmd">./stage3_frontend_mobile/run.sh  <span class="comment"># Expo Mobile Client (http://localhost:8081)</span></div>
+                <br>
+                <div class="comment"># 3. Stop all running services and free ports:</div>
+                <div class="cmd">make stop</div>
+                <br>
+                <div class="comment"># 4. Run automated test suites:</div>
+                <div class="cmd">make test</div>
+            </div>
+        </section>
+
+        <!-- Section 7: Companion Reports Hub -->
+        <section class="section-card" id="companion-reports">
+            <div class="section-header">
+                <div class="sec-icon"><i class="fa-solid fa-book-bookmark"></i></div>
+                <div>
+                    <h3>7. Ecosystem Reports & Documentation Hub</h3>
+                    <p style="font-size: 13px; color: var(--text-muted);">Direct links to in-depth companion reports within the OCR2 documentation suite</p>
+                </div>
+            </div>
+
+            <div class="reports-hub-grid">
+                <a href="file:///Users/mgtimber/CV26/OCR2/reports/OCR2_HOW_IT_WORKS_REPORT.html" class="report-link-card">
+                    <div>
+                        <div class="card-head">
+                            <div class="card-icon" style="background: var(--primary-light); color: var(--primary);">
+                                <i class="fa-solid fa-chart-gantt"></i>
+                            </div>
+                            <h4>OCR2 How It Works Report</h4>
+                        </div>
+                        <p>Interactive Gantt pipelines detailing end-to-end execution, training loops, multi-tenant ingestion, and inference sequences.</p>
+                    </div>
+                    <div class="card-footer-link">
+                        <span>Open Report</span> <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                </a>
+
+                <a href="file:///Users/mgtimber/CV26/OCR2/reports/ML_PIPLINE_REPORT.html" class="report-link-card">
+                    <div>
+                        <div class="card-head">
+                            <div class="card-icon" style="background: var(--accent-emerald-bg); color: var(--accent-emerald);">
+                                <i class="fa-solid fa-brain"></i>
+                            </div>
+                            <h4>ML Pipeline Math Report</h4>
+                        </div>
+                        <p>Deep-dive mathematical formulations, TF-IDF loss optimizations, sublinear scaling, and heuristic entity parsing logic.</p>
+                    </div>
+                    <div class="card-footer-link">
+                        <span>Open Report</span> <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                </a>
+
+                <a href="file:///Users/mgtimber/CV26/OCR2/reports/ML_REPORT.html" class="report-link-card">
+                    <div>
+                        <div class="card-head">
+                            <div class="card-icon" style="background: var(--accent-sky-bg); color: var(--accent-sky);">
+                                <i class="fa-solid fa-square-poll-vertical"></i>
+                            </div>
+                            <h4>ML Performance Report</h4>
+                        </div>
+                        <p>Model benchmarks, F1-scores, precision/recall curves, confusion matrices, and empirical validation metrics.</p>
+                    </div>
+                    <div class="card-footer-link">
+                        <span>Open Report</span> <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Report Footer -->
+    <footer class="report-footer">
+        <p>OCR2 Enterprise Multi-Tenant Document Recognition Architecture &bull; Generated August 2026 &bull; Production Atlas</p>
+    </footer>
+
+</body>
+</html>

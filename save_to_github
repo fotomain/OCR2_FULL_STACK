@@ -1,0 +1,61 @@
+#!/bin/bash
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd "$DIR"
+
+REMOTE_URL="https://github.com/fotomain/OCR2_FULL_STACK.git"
+COMMIT_MSG="${1:-"Update OCR2 full stack ecosystem - $(date '+%Y-%m-%d %H:%M:%S')"}"
+
+echo "======================================================================="
+echo " 🚀 OCR2 ENTERPRISE: SAVE TO GITHUB"
+echo " 📍 Repository: $REMOTE_URL"
+echo " 💬 Commit message: $COMMIT_MSG"
+echo "======================================================================="
+
+# 1. Initialize git if not present
+if [ ! -d ".git" ]; then
+    echo "📦 Initializing Git repository..."
+    git init
+fi
+
+# 2. Set default branch to main
+git branch -M main
+
+# 3. Configure remote origin
+if git remote | grep -q "^origin$"; then
+    echo "🔄 Updating remote origin URL..."
+    git remote set-url origin "$REMOTE_URL"
+else
+    echo "🔗 Adding remote origin..."
+    git remote add origin "$REMOTE_URL"
+fi
+
+echo "✓ Remote configured:"
+git remote -v
+
+# 4. Stage files (respecting .gitignore)
+echo ""
+echo "📂 Staging files..."
+git add -A
+
+# 5. Check status and commit
+echo ""
+if git diff --cached --quiet; then
+    echo "ℹ️  No staged changes detected to commit."
+else
+    echo "💾 Committing changes..."
+    git commit -m "$COMMIT_MSG"
+    echo "✓ Commit created successfully."
+fi
+
+# 6. Push to remote main branch
+echo ""
+echo "🚀 Pushing branch 'main' to origin..."
+git push -u origin main
+
+echo ""
+echo "======================================================================="
+echo " ✅ SUCCESSFULLY SAVED TO GITHUB!"
+echo " 🔗 Visit: https://github.com/fotomain/OCR2_FULL_STACK"
+echo "======================================================================="

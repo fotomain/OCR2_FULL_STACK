@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stage 1 ML Training Report & Files Registry</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-base: #0a0f1d;
+            --bg-card: #121a2f;
+            --border: rgba(255, 255, 255, 0.08);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --emerald: #10b981;
+            --sky: #38bdf8;
+            --amber: #f59e0b;
+            --rose: #f43f5e;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --font-main: 'Inter', sans-serif;
+            --font-heading: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-base);
+            background-image: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+                              radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.08) 0px, transparent 50%);
+            color: var(--text);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            padding: 32px;
+        }
+        .report-wrap {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .hero-header {
+            background: linear-gradient(135deg, rgba(30, 27, 75, 0.8), rgba(15, 23, 42, 0.95));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 28px;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.4);
+        }
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: 26px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .badge-ver {
+            font-size: 11px;
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(99, 102, 241, 0.4);
+        }
+        .hero-sub {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-top: 6px;
+        }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        .kpi-lbl { font-size: 11px; color: var(--text-dim); text-transform: uppercase; font-weight: 700; }
+        .kpi-num { font-family: var(--font-heading); font-size: 24px; font-weight: 800; margin: 4px 0; color: #fff; }
+        .kpi-sub { font-size: 11px; color: var(--text-muted); }
+
+        .section-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title i { color: var(--sky); }
+
+        /* Class Distribution */
+        .class-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 14px;
+        }
+        .class-bar-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+        }
+        .class-bar-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+        .bar-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #38bdf8);
+        }
+
+        /* Table */
+        .table-wrap {
+            overflow-x: auto;
+            margin-top: 12px;
+        }
+        .files-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12.5px;
+        }
+        .files-table th, .files-table td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        .files-table th {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-dim);
+            font-size: 10.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .files-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .cell-id { color: var(--text-dim); width: 40px; }
+        .cell-name strong { color: #fff; }
+        .badge-user {
+            font-size: 11px;
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        .badge-class {
+            font-size: 11px;
+            background: rgba(168, 85, 247, 0.15);
+            color: #c084fc;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        .badge-barcode {
+            display: inline-block;
+            font-size: 10px;
+            font-family: var(--font-mono);
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin: 2px 4px 2px 0;
+        }
+        .badge-none { font-size: 10px; color: var(--text-dim); }
+        .badge-status {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .status-match {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+        }
+        .status-diff {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+        }
+        .text-dim { color: var(--text-dim); font-size: 11px; }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-top: 32px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="report-wrap">
+        <!-- Hero Header -->
+        <div class="hero-header">
+            <div class="hero-title">
+                <i class="fa-solid fa-brain-circuit" style="color: #818cf8;"></i>
+                <span>Stage 1 ML OCR Training Report</span>
+                <span class="badge-ver">v2.1.0 CONVERGED</span>
+            </div>
+            <p class="hero-sub">
+                Generated dynamically on <strong>2026-08-26 12:15:38 UTC</strong> &bull; Output Directory: <code>./output/model/</code>
+            </p>
+
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <span class="kpi-lbl">Model Accuracy</span>
+                    <span class="kpi-num" style="color: #34d399;">100.0%</span>
+                    <span class="kpi-sub">F1 Macro: 100.0%</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-lbl">Total Documents Used</span>
+                    <span class="kpi-num">30</span>
+                    <span class="kpi-sub">PDFs + Images Corpus</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-lbl">Multi-Tenant Users</span>
+                    <span class="kpi-num" style="color: #38bdf8;">6</span>
+                    <span class="kpi-sub">Distinct +user_email subfolders</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-lbl">Barcodes & QRs Detected</span>
+                    <span class="kpi-num" style="color: #c084fc;">89</span>
+                    <span class="kpi-sub">Header, Footer & Line Items</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-lbl">Training Duration</span>
+                    <span class="kpi-num">10.821s</span>
+                    <span class="kpi-sub">Feature extraction + Fit</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class Distribution Section -->
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Document Categories & Class Representation</span>
+            </div>
+            <div class="class-grid">
+                
+        <div class="class-bar-item">
+            <div class="class-bar-header">
+                <span>COMMERCIAL_INVOICE</span>
+                <strong>8 docs (26.7%)</strong>
+            </div>
+            <div class="bar-track">
+                <div class="bar-fill" style="width: 26.7%;"></div>
+            </div>
+        </div>
+        
+
+        <div class="class-bar-item">
+            <div class="class-bar-header">
+                <span>MEDICAL_PHARMA_INVOICE</span>
+                <strong>19 docs (63.3%)</strong>
+            </div>
+            <div class="bar-track">
+                <div class="bar-fill" style="width: 63.3%;"></div>
+            </div>
+        </div>
+        
+
+        <div class="class-bar-item">
+            <div class="class-bar-header">
+                <span>PURCHASE_RECEIPT</span>
+                <strong>2 docs (6.7%)</strong>
+            </div>
+            <div class="bar-track">
+                <div class="bar-fill" style="width: 6.7%;"></div>
+            </div>
+        </div>
+        
+
+        <div class="class-bar-item">
+            <div class="class-bar-header">
+                <span>TAX_STATEMENT</span>
+                <strong>1 docs (3.3%)</strong>
+            </div>
+            <div class="bar-track">
+                <div class="bar-fill" style="width: 3.3%;"></div>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+
+        <!-- Files Used in the Process Registry -->
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fa-solid fa-folder-open"></i>
+                <span>Files Used Inside the Learning Process (30 Files)</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+                Complete inventory of all PDFs and images ingested from <code>./dataset_for_ml</code> and multi-tenant <code>+user_email</code> folders during this training run.
+            </p>
+
+            <div class="table-wrap">
+                <table class="files-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Document File & Path</th>
+                            <th>Source Tenant</th>
+                            <th>Size</th>
+                            <th>Extracted Content</th>
+                            <th>Detected Barcodes / QR Codes</th>
+                            <th>Ground Truth</th>
+                            <th>Model Prediction</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+        <tr>
+            <td class="cell-id">1</td>
+            <td class="cell-name">
+                <strong>base_invoice_01.pdf</strong><br>
+                <small class="text-dim">base_invoice_01.pdf</small>
+            </td>
+            <td><span class="badge-user">base_corpus</span></td>
+            <td>70.1 KB</td>
+            <td>66 tokens / 443 chars</td>
+            <td><span class="badge-barcode">QR_CODE: HTTPS://PORTAL.GLOBALTECH.IO/INV/8819 (HEADER)</span><span class="badge-barcode">QR_CODE: HTTPS://AUDIT.GLOBALTECH.IO/VERIFY/8819 (FOOTER)</span></td>
+            <td><span class="badge-class">TAX_STATEMENT</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    TAX_STATEMENT (70.6%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">2</td>
+            <td class="cell-name">
+                <strong>sample_vita_genomics.pdf</strong><br>
+                <small class="text-dim">sample_vita_genomics.pdf</small>
+            </td>
+            <td><span class="badge-user">base_corpus</span></td>
+            <td>6.5 KB</td>
+            <td>480 tokens / 3548 chars</td>
+            <td><span class="badge-barcode">CODE_128: LV-ZVA-051940-01 (HEADER)</span><span class="badge-barcode">GS1_128_NDC: (01)0037189412001 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-048120-02 (ITEM_LINE)</span><span class="badge-barcode">GS1_128_NDC: (01)0037139441501 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-039480-01 (ITEM_LINE)</span><span class="badge-barcode">GS1_128_NDC: (01)0035789409001 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-028910-03 (ITEM_LINE)</span><span class="badge-barcode">GS1_128_NDC: (01)0035551388101 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-019402-04 (FOOTER)</span><span class="badge-barcode">GS1_128_NDC: (01)0036332391210 (FOOTER)</span><span class="badge-barcode">QR_CODE: https://www.ok.com (FOOTER)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (52.2%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">3</td>
+            <td class="cell-name">
+                <strong>medical_invoice_example1.pdf</strong><br>
+                <small class="text-dim">medical_invoice_example1.pdf</small>
+            </td>
+            <td><span class="badge-user">base_corpus</span></td>
+            <td>69.4 KB</td>
+            <td>503 tokens / 3725 chars</td>
+            <td><span class="badge-barcode">CODE_128: LV-ZVA-020491-01 (HEADER)</span><span class="badge-barcode">GS1_128_NDC: (01)0036195829011 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-018342-03 (ITEM_LINE)</span><span class="badge-barcode">GS1_128_NDC: (01)0030006302602 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-009814-02 (ITEM_LINE)</span><span class="badge-barcode">GS1_128_NDC: (01)0030075062140 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-014520-01 (ITEM_LINE)</span><span class="badge-barcode">GS1_128_NDC: (01)0036745741820 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-007193-04 (ITEM_LINE)</span><span class="badge-barcode">GS1_128_NDC: (01)0030088222033 (ITEM_LINE)</span><span class="badge-barcode">QR_CODE: https://www.ok.com (FOOTER)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (53.5%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">4</td>
+            <td class="cell-name">
+                <strong>medical_invoice_example2.pdf</strong><br>
+                <small class="text-dim">medical_invoice_example2.pdf</small>
+            </td>
+            <td><span class="badge-user">base_corpus</span></td>
+            <td>75.5 KB</td>
+            <td>484 tokens / 3619 chars</td>
+            <td><span class="badge-barcode">CODE_128: LV-ZVA-034918-01 (HEADER)</span><span class="badge-barcode">CODE_128: LV-ZVA-028301-02 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-019482-01 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-017204-03 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-036819-02 (FOOTER)</span><span class="badge-barcode">QR_CODE: https://www.ok.com (FOOTER)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (52.3%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">5</td>
+            <td class="cell-name">
+                <strong>base_medical_invoice_01.pdf</strong><br>
+                <small class="text-dim">base_medical_invoice_01.pdf</small>
+            </td>
+            <td><span class="badge-user">base_corpus</span></td>
+            <td>68.5 KB</td>
+            <td>76 tokens / 588 chars</td>
+            <td><span class="badge-barcode">QR_CODE: HTTPS://NEXUS-MED.IO/AUDIT/LV-ZVA-99120 (HEADER)</span><span class="badge-barcode">QR_CODE: HTTPS://AUDIT.NEXUS-BIOPHARMA.ORG/SIG/LOT-8924 (FOOTER)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (44.7%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">6</td>
+            <td class="cell-name">
+                <strong>base_receipt_01.png</strong><br>
+                <small class="text-dim">base_receipt_01.png</small>
+            </td>
+            <td><span class="badge-user">base_corpus</span></td>
+            <td>38.3 KB</td>
+            <td>35 tokens / 245 chars</td>
+            <td><span class="badge-barcode">QR_CODE: HTTPS://RECEIPT.TARGET.COM/R/9042 (HEADER)</span><span class="badge-barcode">QR_CODE: HTTPS://TARGET.COM/FEEDBACK/9042 (FOOTER)</span></td>
+            <td><span class="badge-class">PURCHASE_RECEIPT</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    PURCHASE_RECEIPT (63.6%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">7</td>
+            <td class="cell-name">
+                <strong>test_invoice.pdf</strong><br>
+                <small class="text-dim">+testuser@company.com/test_invoice.pdf</small>
+            </td>
+            <td><span class="badge-user">testuser@company.com</span></td>
+            <td>0.0 KB</td>
+            <td>8 tokens / 73 chars</td>
+            <td><span class="badge-none">None detected</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (52.0%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">8</td>
+            <td class="cell-name">
+                <strong>sample_isotope_biopharma_rad.pdf</strong><br>
+                <small class="text-dim">+executive.analyst@nexus-biomed.org/sample_isotope_biopharma_rad.pdf</small>
+            </td>
+            <td><span class="badge-user">executive.analyst@nexus-biomed.org</span></td>
+            <td>6.5 KB</td>
+            <td>446 tokens / 3382 chars</td>
+            <td><span class="badge-barcode">CODE_128: LV-ZVA-039912-01 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-038104-02 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-021948-03 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-036109-01 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-014902-04 (FOOTER)</span><span class="badge-barcode">QR_CODE: https://www.ok.com (FOOTER)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (51.3%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">9</td>
+            <td class="cell-name">
+                <strong>sample_vita_genomics.pdf</strong><br>
+                <small class="text-dim">+executive.analyst@nexus-biomed.org/sample_vita_genomics.pdf</small>
+            </td>
+            <td><span class="badge-user">executive.analyst@nexus-biomed.org</span></td>
+            <td>6.5 KB</td>
+            <td>480 tokens / 3548 chars</td>
+            <td><span class="badge-barcode">CODE_128: LV-ZVA-051940-01 (HEADER)</span><span class="badge-barcode">GS1_128_NDC: (01)0037189412001 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-048120-02 (ITEM_LINE)</span><span class="badge-barcode">GS1_128_NDC: (01)0037139441501 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-039480-01 (ITEM_LINE)</span><span class="badge-barcode">GS1_128_NDC: (01)0035789409001 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-028910-03 (ITEM_LINE)</span><span class="badge-barcode">GS1_128_NDC: (01)0035551388101 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-019402-04 (FOOTER)</span><span class="badge-barcode">GS1_128_NDC: (01)0036332391210 (FOOTER)</span><span class="badge-barcode">QR_CODE: https://www.ok.com (FOOTER)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (52.2%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">10</td>
+            <td class="cell-name">
+                <strong>medical_invoice_example1.pdf</strong><br>
+                <small class="text-dim">+executive.analyst@nexus-biomed.org/medical_invoice_example1.pdf</small>
+            </td>
+            <td><span class="badge-user">executive.analyst@nexus-biomed.org</span></td>
+            <td>69.4 KB</td>
+            <td>503 tokens / 3725 chars</td>
+            <td><span class="badge-barcode">CODE_128: LV-ZVA-020491-01 (HEADER)</span><span class="badge-barcode">GS1_128_NDC: (01)0036195829011 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-018342-03 (ITEM_LINE)</span><span class="badge-barcode">GS1_128_NDC: (01)0030006302602 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-009814-02 (ITEM_LINE)</span><span class="badge-barcode">GS1_128_NDC: (01)0030075062140 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-014520-01 (ITEM_LINE)</span><span class="badge-barcode">GS1_128_NDC: (01)0036745741820 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-007193-04 (ITEM_LINE)</span><span class="badge-barcode">GS1_128_NDC: (01)0030088222033 (ITEM_LINE)</span><span class="badge-barcode">QR_CODE: https://www.ok.com (FOOTER)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (53.5%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">11</td>
+            <td class="cell-name">
+                <strong>medical_invoice_example2.pdf</strong><br>
+                <small class="text-dim">+executive.analyst@nexus-biomed.org/medical_invoice_example2.pdf</small>
+            </td>
+            <td><span class="badge-user">executive.analyst@nexus-biomed.org</span></td>
+            <td>75.5 KB</td>
+            <td>484 tokens / 3619 chars</td>
+            <td><span class="badge-barcode">CODE_128: LV-ZVA-034918-01 (HEADER)</span><span class="badge-barcode">CODE_128: LV-ZVA-028301-02 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-019482-01 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-017204-03 (ITEM_LINE)</span><span class="badge-barcode">CODE_128: LV-ZVA-036819-02 (FOOTER)</span><span class="badge-barcode">QR_CODE: https://www.ok.com (FOOTER)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (52.3%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">12</td>
+            <td class="cell-name">
+                <strong>medical_invoice_example3.pdf</strong><br>
+                <small class="text-dim">+executive.analyst@nexus-biomed.org/medical_invoice_example3.pdf</small>
+            </td>
+            <td><span class="badge-user">executive.analyst@nexus-biomed.org</span></td>
+            <td>73.5 KB</td>
+            <td>455 tokens / 3417 chars</td>
+            <td><span class="badge-barcode">QR_CODE: https://www.ok.com (FOOTER)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (51.4%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">13</td>
+            <td class="cell-name">
+                <strong>item_bc_SKU-ML-AUDIT-01.png</strong><br>
+                <small class="text-dim">.temp_assets/item_bc_SKU-ML-AUDIT-01.png</small>
+            </td>
+            <td><span class="badge-user">.temp_assets</span></td>
+            <td>4.0 KB</td>
+            <td>1 tokens / 15 chars</td>
+            <td><span class="badge-barcode">CODE_128: SKU-ML-AUDIT-01 (ITEM_LINE)</span></td>
+            <td><span class="badge-class">COMMERCIAL_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    COMMERCIAL_INVOICE (53.4%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">14</td>
+            <td class="cell-name">
+                <strong>h_qr_LV-ZVA-PHARM-2026-089.png</strong><br>
+                <small class="text-dim">.temp_assets/h_qr_LV-ZVA-PHARM-2026-089.png</small>
+            </td>
+            <td><span class="badge-user">.temp_assets</span></td>
+            <td>5.2 KB</td>
+            <td>8 tokens / 87 chars</td>
+            <td><span class="badge-barcode">QR_CODE: HTTPS://NEXUS-MED.IO/AUDIT/LV-ZVA-99120 (ITEM_LINE)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (58.5%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">15</td>
+            <td class="cell-name">
+                <strong>f_qr_LV-ZVA-PHARM-2026-089.png</strong><br>
+                <small class="text-dim">.temp_assets/f_qr_LV-ZVA-PHARM-2026-089.png</small>
+            </td>
+            <td><span class="badge-user">.temp_assets</span></td>
+            <td>5.5 KB</td>
+            <td>8 tokens / 87 chars</td>
+            <td><span class="badge-barcode">QR_CODE: HTTPS://AUDIT.NEXUS-BIOPHARMA.ORG/SIG/LOT-8924 (ITEM_LINE)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (58.5%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">16</td>
+            <td class="cell-name">
+                <strong>item_bc_RFID-COLD-2C-8C.png</strong><br>
+                <small class="text-dim">.temp_assets/item_bc_RFID-COLD-2C-8C.png</small>
+            </td>
+            <td><span class="badge-user">.temp_assets</span></td>
+            <td>3.7 KB</td>
+            <td>1 tokens / 15 chars</td>
+            <td><span class="badge-barcode">CODE_128: RFID-COLD-2C-8C (ITEM_LINE)</span></td>
+            <td><span class="badge-class">COMMERCIAL_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    COMMERCIAL_INVOICE (50.8%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">17</td>
+            <td class="cell-name">
+                <strong>item_bc_SKU-SRV-CLOUD-99.png</strong><br>
+                <small class="text-dim">.temp_assets/item_bc_SKU-SRV-CLOUD-99.png</small>
+            </td>
+            <td><span class="badge-user">.temp_assets</span></td>
+            <td>4.7 KB</td>
+            <td>1 tokens / 16 chars</td>
+            <td><span class="badge-barcode">CODE_128: SKU-SRV-CLOUD-99 (ITEM_LINE)</span></td>
+            <td><span class="badge-class">COMMERCIAL_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    COMMERCIAL_INVOICE (52.8%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">18</td>
+            <td class="cell-name">
+                <strong>h_qr_INV-2026-8819.png</strong><br>
+                <small class="text-dim">.temp_assets/h_qr_INV-2026-8819.png</small>
+            </td>
+            <td><span class="badge-user">.temp_assets</span></td>
+            <td>3.9 KB</td>
+            <td>8 tokens / 79 chars</td>
+            <td><span class="badge-barcode">QR_CODE: HTTPS://PORTAL.GLOBALTECH.IO/INV/8819 (ITEM_LINE)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (52.1%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">19</td>
+            <td class="cell-name">
+                <strong>h_bc_INV-2026-8819.png</strong><br>
+                <small class="text-dim">.temp_assets/h_bc_INV-2026-8819.png</small>
+            </td>
+            <td><span class="badge-user">.temp_assets</span></td>
+            <td>4.1 KB</td>
+            <td>3 tokens / 15 chars</td>
+            <td><span class="badge-barcode">CODE_128: INV-2026-8819 (ITEM_LINE)</span></td>
+            <td><span class="badge-class">COMMERCIAL_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    COMMERCIAL_INVOICE (46.0%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">20</td>
+            <td class="cell-name">
+                <strong>item_bc_50458-578-01.png</strong><br>
+                <small class="text-dim">.temp_assets/item_bc_50458-578-01.png</small>
+            </td>
+            <td><span class="badge-user">.temp_assets</span></td>
+            <td>3.0 KB</td>
+            <td>1 tokens / 12 chars</td>
+            <td><span class="badge-barcode">CODE_128: 50458-578-01 (ITEM_LINE)</span></td>
+            <td><span class="badge-class">COMMERCIAL_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    COMMERCIAL_INVOICE (52.2%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">21</td>
+            <td class="cell-name">
+                <strong>f_qr_INV-2026-8819.png</strong><br>
+                <small class="text-dim">.temp_assets/f_qr_INV-2026-8819.png</small>
+            </td>
+            <td><span class="badge-user">.temp_assets</span></td>
+            <td>5.6 KB</td>
+            <td>8 tokens / 79 chars</td>
+            <td><span class="badge-barcode">QR_CODE: HTTPS://AUDIT.GLOBALTECH.IO/VERIFY/8819 (ITEM_LINE)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (52.1%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">22</td>
+            <td class="cell-name">
+                <strong>h_bc_LV-ZVA-PHARM-2026-089.png</strong><br>
+                <small class="text-dim">.temp_assets/h_bc_LV-ZVA-PHARM-2026-089.png</small>
+            </td>
+            <td><span class="badge-user">.temp_assets</span></td>
+            <td>4.5 KB</td>
+            <td>1 tokens / 17 chars</td>
+            <td><span class="badge-barcode">CODE_128: LV-ZVA-PHARM-2026 (ITEM_LINE)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (47.6%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">23</td>
+            <td class="cell-name">
+                <strong>f_bc_LV-ZVA-PHARM-2026-089.png</strong><br>
+                <small class="text-dim">.temp_assets/f_bc_LV-ZVA-PHARM-2026-089.png</small>
+            </td>
+            <td><span class="badge-user">.temp_assets</span></td>
+            <td>5.0 KB</td>
+            <td>1 tokens / 25 chars</td>
+            <td><span class="badge-barcode">CODE_128: COLD-CHAIN-RFID-LOGISTICS (ITEM_LINE)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (40.7%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">24</td>
+            <td class="cell-name">
+                <strong>f_bc_INV-2026-8819.png</strong><br>
+                <small class="text-dim">.temp_assets/f_bc_INV-2026-8819.png</small>
+            </td>
+            <td><span class="badge-user">.temp_assets</span></td>
+            <td>5.7 KB</td>
+            <td>2 tokens / 23 chars</td>
+            <td><span class="badge-barcode">CODE_128: BANK-ROUTING-9901-4412 (ITEM_LINE)</span></td>
+            <td><span class="badge-class">COMMERCIAL_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    COMMERCIAL_INVOICE (50.9%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">25</td>
+            <td class="cell-name">
+                <strong>bob_pos_hardware_receipt.png</strong><br>
+                <small class="text-dim">+bob@enterprise.com/bob_pos_hardware_receipt.png</small>
+            </td>
+            <td><span class="badge-user">bob@enterprise.com</span></td>
+            <td>33.7 KB</td>
+            <td>32 tokens / 223 chars</td>
+            <td><span class="badge-barcode">QR_CODE: HTTPS://BOB-LOGISTICS.COM/ORD/4412 (HEADER)</span><span class="badge-barcode">QR_CODE: HTTPS://BOB-LOGISTICS.COM/TRACK/4412 (FOOTER)</span></td>
+            <td><span class="badge-class">PURCHASE_RECEIPT</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    PURCHASE_RECEIPT (63.3%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">26</td>
+            <td class="cell-name">
+                <strong>alice_clinical_trial_inv.pdf</strong><br>
+                <small class="text-dim">+alice@biocorp.com/alice_clinical_trial_inv.pdf</small>
+            </td>
+            <td><span class="badge-user">alice@biocorp.com</span></td>
+            <td>42.2 KB</td>
+            <td>65 tokens / 464 chars</td>
+            <td><span class="badge-barcode">QR_CODE: HTTPS://BIORESEARCH.ALICE.ORG/TRIAL/7711 (HEADER)</span><span class="badge-barcode">QR_CODE: HTTPS://FDA.GOV/IND/99120/AUDIT (FOOTER)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (38.1%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">27</td>
+            <td class="cell-name">
+                <strong>f_bc_BIO-2026-7711.png</strong><br>
+                <small class="text-dim">+alice@biocorp.com/.temp_assets/f_bc_BIO-2026-7711.png</small>
+            </td>
+            <td><span class="badge-user">alice@biocorp.com</span></td>
+            <td>5.7 KB</td>
+            <td>4 tokens / 27 chars</td>
+            <td><span class="badge-barcode">CODE_128: RESEARCH-GRANT-EXEMPT-01 (ITEM_LINE)</span></td>
+            <td><span class="badge-class">COMMERCIAL_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    COMMERCIAL_INVOICE (52.2%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">28</td>
+            <td class="cell-name">
+                <strong>f_qr_BIO-2026-7711.png</strong><br>
+                <small class="text-dim">+alice@biocorp.com/.temp_assets/f_qr_BIO-2026-7711.png</small>
+            </td>
+            <td><span class="badge-user">alice@biocorp.com</span></td>
+            <td>3.9 KB</td>
+            <td>8 tokens / 79 chars</td>
+            <td><span class="badge-barcode">QR_CODE: HTTPS://FDA.GOV/IND/99120/AUDIT (ITEM_LINE)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (55.7%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">29</td>
+            <td class="cell-name">
+                <strong>h_bc_BIO-2026-7711.png</strong><br>
+                <small class="text-dim">+alice@biocorp.com/.temp_assets/h_bc_BIO-2026-7711.png</small>
+            </td>
+            <td><span class="badge-user">alice@biocorp.com</span></td>
+            <td>3.9 KB</td>
+            <td>1 tokens / 13 chars</td>
+            <td><span class="badge-barcode">CODE_128: BIO-IND-99120 (ITEM_LINE)</span></td>
+            <td><span class="badge-class">COMMERCIAL_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    COMMERCIAL_INVOICE (51.0%)
+                </span>
+            </td>
+        </tr>
+        
+
+        <tr>
+            <td class="cell-id">30</td>
+            <td class="cell-name">
+                <strong>h_qr_BIO-2026-7711.png</strong><br>
+                <small class="text-dim">+alice@biocorp.com/.temp_assets/h_qr_BIO-2026-7711.png</small>
+            </td>
+            <td><span class="badge-user">alice@biocorp.com</span></td>
+            <td>5.4 KB</td>
+            <td>8 tokens / 79 chars</td>
+            <td><span class="badge-barcode">QR_CODE: HTTPS://BIORESEARCH.ALICE.ORG/TRIAL/7711 (ITEM_LINE)</span></td>
+            <td><span class="badge-class">MEDICAL_PHARMA_INVOICE</span></td>
+            <td>
+                <span class="badge-status status-match">
+                    MEDICAL_PHARMA_INVOICE (55.7%)
+                </span>
+            </td>
+        </tr>
+        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">
+            OCR2 Enterprise Machine Learning Pipeline &bull; Stage 1 Output Report &bull; Generated dynamically upon StartLearnModelButton trigger
+        </div>
+    </div>
+</body>
+</html>

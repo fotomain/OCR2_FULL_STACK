@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}OCR2 Enterprise Intelligence Platform{% endblock %}</title>
+    <!-- Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Main Executive CSS -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <!-- Early theme init: light theme by default -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('ocr2_theme') || 'light-theme';
+            document.documentElement.className = savedTheme;
+        })();
+    </script>
+</head>
+<body class="light-theme">
+    <!-- Top Navigation Bar -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand-section">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-brain-circuit"></i>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">OCR2 <span class="brand-badge">ENTERPRISE</span></span>
+                    <span class="brand-sub">Multi-Tenant Document Recognition Engine</span>
+                </div>
+            </div>
+
+            <div class="header-center-actions">
+                <div class="system-status-pill">
+                    <span class="status-indicator live-pulse"></span>
+                    <span class="status-label">Stage 1 ML Service: <strong id="stage1-status-text">ONLINE (8000)</strong></span>
+                </div>
+
+                <!-- Theme Toggle Button -->
+                <button type="button" class="btn-theme-toggle" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark / Light Theme">
+                    <i class="fa-solid fa-moon" id="theme-toggle-icon"></i>
+                    <span id="theme-toggle-text">Dark Mode</span>
+                </button>
+            </div>
+
+            <div class="auth-section">
+                {% if user_email %}
+                <div class="user-chip">
+                    <div class="avatar-circle">
+                        <i class="fa-brands fa-google"></i>
+                    </div>
+                    <div class="user-meta">
+                        <span class="user-name">{{ user_name }}</span>
+                        <span class="user-email">{{ user_email }}</span>
+                    </div>
+                    <a href="/auth/logout/" class="btn-logout" title="Sign Out"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+                </div>
+                {% else %}
+                <a href="/auth/google/login/" class="btn-google-auth">
+                    <i class="fa-brands fa-google"></i> Sign in with Google
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Shell -->
+    <main class="main-viewport">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="footer-content">
+            <span>OCR2 Multi-Tenant Recognition Architecture &bull; FastAPI + Django + React Native Expo MD3</span>
+            <div class="footer-links">
+                <a href="http://127.0.0.1:8000/docs" target="_blank"><i class="fa-solid fa-code"></i> Stage 1 OpenAPI Docs</a>
+                <a href="/auth/demo/?email=chief.medical@hospital.org&name=Chief+Medical+Officer"><i class="fa-solid fa-user-doctor"></i> Medical Persona</a>
+                <a href="/auth/demo/?email=finance.director@corp.com&name=Finance+Director"><i class="fa-solid fa-briefcase"></i> Finance Persona</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
