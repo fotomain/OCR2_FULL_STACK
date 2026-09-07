@@ -1,5 +1,5 @@
 {
-  "total_samples": 34,
+  "total_samples": 40,
   "categories_count": 4,
   "classes": [
     "COMMERCIAL_INVOICE",
@@ -11,18 +11,19 @@
   "precision_macro": 1.0,
   "recall_macro": 1.0,
   "f1_macro": 1.0,
-  "training_duration_seconds": 15.69,
+  "training_duration_seconds": 11.44,
   "documents_per_user": {
     "testuser@company.com": 1,
-    "corporate.lead@vita-genomics.org": 1,
-    "executive.analyst@nexus-biomed.org": 8,
+    "vtest777999@gmail.com": 1,
+    "corporate.lead@vita-genomics.org": 4,
+    "executive.analyst@nexus-biomed.org": 10,
     ".temp_assets": 12,
     "bob@enterprise.com": 1,
     "alice@biocorp.com": 5
   },
   "confusion_matrix_summary": {
     "trained_classes": 4,
-    "evaluated_samples": 34,
+    "evaluated_samples": 40,
     "status": "CONVERGED_OPTIMAL"
   }
 }
