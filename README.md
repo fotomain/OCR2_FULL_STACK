@@ -79,8 +79,6 @@ PYTHONPATH=. .venv/bin/pytest stage1_ml_ocr/tests/ -v
 PYTHONPATH=stage2_frontend_web .venv/bin/python stage2_frontend_web/manage.py test ocr_web
 ```
 
----
-
 ## 💾 Save to GitHub (`save_to_github`)
 
 Use the `save_to_github` command to automatically initialize Git (if needed), configure the remote origin, stage all files according to `.gitignore`, commit changes, and push to GitHub:
